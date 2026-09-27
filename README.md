@@ -1,5 +1,71 @@
 # Trip Dollar
 
+## Run from a raw expense file
+
+Supply the people, final currency and default split on the command line:
+
+```bash
+trip-dollar examples/iceland-2026/raw.txt --participants L B D M --base CAD --split L B
+```
+
+Missing exchange rates are fetched automatically. For this file, the trip end date
+is inferred as 2026-08-16. Online rates may differ from the rate saved in the example.
+To reproduce its exact result without network access:
+
+```bash
+trip-dollar examples/iceland-2026/raw.txt --participants L B D M --base CAD --split L B --fx ISK=0.0113CAD --offline
+```
+
+Use `"L=Li Chen"` instead of `L` to show a name. Codes remain single letters;
+`A` is reserved for everyone. Include people who never paid. `--split L B` applies
+only to expenses without an allocation suffix; it does not depend on who paid.
+
+### Exchange rates
+
+The left side of an equation is always one unit. Both directions work:
+
+```bash
+--fx CAD=88.6ISK
+--fx ISK=0.0113CAD USD=1.37CAD EUR=1.50CAD
+```
+
+The first equation means 1 CAD buys 88.6 ISK, so ISK amounts are divided by 88.6.
+The second form multiplies ISK by 0.0113. These two sample rates are not exactly
+equal; use one equation per currency pair. Every pair must include `--base`.
+Rates must be positive and finite; conflicting equations are rejected.
+Unspecified pairs are fetched from Frankfurter's ECB reference-rate feed.
+Unsupported currencies or failed lookups stop the calculation; provide `--fx` to
+use another source. The request contains currency codes and dates, never expenses
+or participant names.
+
+`--fx-date YYYY-MM-DD` selects a date explicitly. Otherwise, a `YYYY.Month.Title`
+heading and `MMDD` date headings must establish the trip end date unambiguously.
+The latest calendar date is used without reordering expenses. A weekend or holiday
+uses the most recent published observation within the preceding seven days. The
+report and JSON audit show the actual observation date. Future dates are rejected
+for online lookup. The provider API is documented at https://frankfurter.dev/.
+
+Online responses are saved in `.trip-dollar/fx-cache.json` and reused for the same
+pair and date. Use `--fx-cache PATH` for a separate cache. `--offline` requires all
+rates explicitly; it never contacts the provider. Explicit equations always win.
+
+### Errors and audit
+
+If the first expense has no currency, supply `--initial-currency ISK` or correct
+the raw record. Without either, the command fails with the source line and exits
+with code 2. Later labels do not backfill earlier records, and online FX never
+determines a transaction's currency.
+
+Use `--audit audit.json` to save the exact ledger, resolved configuration, input
+hash, overrides, and FX provenance. `--json` prints that same data to stdout.
+Text errors go to stderr; no payment instructions are printed on failure.
+Display amounts default to two decimal places (`--precision` changes this).
+Rounding is for display only, so displayed amounts can differ by a cent when added;
+the audit retains exact Decimal balances and transfers.
+
+The older `trip-dollar config.json transactions.json` interface still works.
+Use its `--raw-text` flag when the second file contains raw text.
+
 ## Real ledger example
 
 The [August 2026 Iceland example](examples/iceland-2026/README.md) contains a
