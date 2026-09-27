@@ -1,9 +1,8 @@
 name: Python tests
 
 on:
-  push:
   pull_request:
-  workflow_dispatch:
+    branches: [main]
 
 permissions:
   contents: read
