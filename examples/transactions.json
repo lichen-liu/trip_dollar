@@ -1,0 +1,6 @@
+[
+  {"id": "tx_001", "date": "0815", "description": "Breakfast", "raw_text": "L24 CAD"},
+  {"id": "tx_002", "date": "0815", "description": "Museum", "raw_text": "X60A"},
+  {"id": "tx_003", "date": "0816", "description": "Snack", "raw_text": "B10X USD"},
+  {"id": "tx_004", "date": "0814", "description": "Taxi", "raw_text": "L20A"}
+]

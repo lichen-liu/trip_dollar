@@ -1,0 +1,21 @@
+{
+  "status": "SETTLEMENT_READY",
+  "base_currency": "CAD",
+  "total_expense": "290",
+  "rows": [
+    [1, "breakfast", "alice", "60", "CAD", "CAD", "explicit", "equal_split", "60", {"alice": "30", "bob": "30"}, "VALID"],
+    [2, "tickets", "charlie", "90", null, "CAD", "inherited", "all_equal", "90", {"alice": "30", "bob": "30", "charlie": "30"}, "VALID"],
+    [3, "gift", "bob", "24", "USD", "USD", "explicit", "single", "30", {"charlie": "30"}, "VALID"],
+    [4, "taxi", "alice", "48", null, "USD", "inherited", "all_equal", "60", {"alice": "20", "bob": "20", "charlie": "20"}, "VALID"],
+    [5, "lunch", "charlie", "20", "EUR", "CAD", "override", "single", "20", {"bob": "20"}, "OVERRIDDEN"],
+    [6, "parking", "bob", "30", null, "CAD", "inherited", "all_equal", "30", {"alice": "10", "bob": "10", "charlie": "10"}, "VALID"]
+  ],
+  "paid": {"alice": "120", "bob": "60", "charlie": "110"},
+  "share": {"alice": "90", "bob": "110", "charlie": "90"},
+  "net": {"alice": "30", "bob": "-50", "charlie": "20"},
+  "settlements": [
+    {"from": "bob", "to": "alice", "amount": "30"},
+    {"from": "bob", "to": "charlie", "amount": "20"}
+  ],
+  "currency_segments": ["#1-#2: CAD", "#3-#4: USD", "#5-#6: CAD"]
+}

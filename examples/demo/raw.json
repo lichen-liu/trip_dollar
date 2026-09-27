@@ -1,0 +1,8 @@
+[
+  {"id": "breakfast", "date": "2026-08-15", "description": "Breakfast for Alice and Bob", "raw_text": "L60 CAD"},
+  {"id": "tickets", "date": "2026-08-15", "description": "Tickets for everyone", "raw_text": "C90A"},
+  {"id": "gift", "date": "2026-08-16", "description": "Bob fronts Charlie's purchase", "raw_text": "B24C USD"},
+  {"id": "taxi", "date": "2026-08-14", "description": "Earlier date entered later: shared taxi", "raw_text": "L48A"},
+  {"id": "lunch", "date": "2026-08-16", "description": "Charlie's payment for Bob; currency corrected separately", "raw_text": "C20B EUR"},
+  {"id": "parking", "date": "2026-08-16", "description": "Shared parking inherits corrected currency", "raw_text": "B30A"}
+]

@@ -1,0 +1,16 @@
+{
+  "base_currency": "CAD",
+  "participants": [
+    {"id": "traveler_1", "code": "L", "name": "Traveler One"},
+    {"id": "traveler_2", "code": "B", "name": "Traveler Two"},
+    {"id": "traveler_3", "code": "X", "name": "Traveler Three"}
+  ],
+  "fx_rates": {
+    "CAD": 1,
+    "USD": {"base_per_unit": "1.37"}
+  },
+  "default_allocation": {
+    "type": "equal_split",
+    "participants": ["L", "B"]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "base_currency": "CAD",
+  "participants": [
+    {"id": "alice", "code": "L", "name": "Alice"},
+    {"id": "bob", "code": "B", "name": "Bob"},
+    {"id": "charlie", "code": "C", "name": "Charlie"}
+  ],
+  "fx_rates": {"CAD": "1", "USD": "1.25", "EUR": "1.50"},
+  "default_allocation": {"type": "equal_split", "participants": ["L", "B"]}
+}

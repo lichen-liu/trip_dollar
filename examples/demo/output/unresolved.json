@@ -1,0 +1,255 @@
+{
+  "status": "AUDIT_REQUIRED",
+  "base_currency": "CAD",
+  "total_expense": "140.00",
+  "transactions": [
+    {
+      "id": "breakfast",
+      "sequence": 1,
+      "date": "2026-08-15",
+      "description": "Breakfast for Alice and Bob",
+      "raw_text": "L60",
+      "source_text": "L60",
+      "source_sequence": 1,
+      "source_span": [
+        0,
+        3
+      ],
+      "payer_id": "alice",
+      "payer_code": "L",
+      "original_amount": "60",
+      "explicit_currency": null,
+      "currency": null,
+      "currency_source": "unknown",
+      "allocation": {
+        "type": "equal_split",
+        "participants": [
+          "alice",
+          "bob"
+        ],
+        "weights": [
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": null,
+      "shares": {},
+      "override_applied": false,
+      "status": "UNRESOLVED_CURRENCY",
+      "errors": [
+        "currency is unresolved"
+      ]
+    },
+    {
+      "id": "tickets",
+      "sequence": 2,
+      "date": "2026-08-15",
+      "description": "Tickets for everyone",
+      "raw_text": "C90A",
+      "source_text": "C90A",
+      "source_sequence": 2,
+      "source_span": [
+        0,
+        4
+      ],
+      "payer_id": "charlie",
+      "payer_code": "C",
+      "original_amount": "90",
+      "explicit_currency": null,
+      "currency": null,
+      "currency_source": "unknown",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "alice",
+          "bob",
+          "charlie"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": null,
+      "shares": {},
+      "override_applied": false,
+      "status": "UNRESOLVED_CURRENCY",
+      "errors": [
+        "currency is unresolved"
+      ]
+    },
+    {
+      "id": "gift",
+      "sequence": 3,
+      "date": "2026-08-16",
+      "description": "Bob fronts Charlie's purchase",
+      "raw_text": "B24C USD",
+      "source_text": "B24C USD",
+      "source_sequence": 3,
+      "source_span": [
+        0,
+        8
+      ],
+      "payer_id": "bob",
+      "payer_code": "B",
+      "original_amount": "24",
+      "explicit_currency": "USD",
+      "currency": "USD",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "single",
+        "participants": [
+          "charlie"
+        ],
+        "weights": [
+          "1"
+        ]
+      },
+      "base_amount": "30.00",
+      "shares": {
+        "charlie": "30.00"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "taxi",
+      "sequence": 4,
+      "date": "2026-08-14",
+      "description": "Earlier date entered later: shared taxi",
+      "raw_text": "L48A",
+      "source_text": "L48A",
+      "source_sequence": 4,
+      "source_span": [
+        0,
+        4
+      ],
+      "payer_id": "alice",
+      "payer_code": "L",
+      "original_amount": "48",
+      "explicit_currency": null,
+      "currency": "USD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "alice",
+          "bob",
+          "charlie"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "60.00",
+      "shares": {
+        "alice": "20.00",
+        "bob": "20.00",
+        "charlie": "20.00"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "lunch",
+      "sequence": 5,
+      "date": "2026-08-16",
+      "description": "Charlie's payment for Bob; currency corrected separately",
+      "raw_text": "C20B EUR",
+      "source_text": "C20B EUR",
+      "source_sequence": 5,
+      "source_span": [
+        0,
+        8
+      ],
+      "payer_id": "charlie",
+      "payer_code": "C",
+      "original_amount": "20",
+      "explicit_currency": "EUR",
+      "currency": "CAD",
+      "currency_source": "override",
+      "allocation": {
+        "type": "single",
+        "participants": [
+          "bob"
+        ],
+        "weights": [
+          "1"
+        ]
+      },
+      "base_amount": "20",
+      "shares": {
+        "bob": "20"
+      },
+      "override_applied": true,
+      "status": "OVERRIDDEN",
+      "errors": []
+    },
+    {
+      "id": "parking",
+      "sequence": 6,
+      "date": "2026-08-16",
+      "description": "Shared parking inherits corrected currency",
+      "raw_text": "B30A",
+      "source_text": "B30A",
+      "source_sequence": 6,
+      "source_span": [
+        0,
+        4
+      ],
+      "payer_id": "bob",
+      "payer_code": "B",
+      "original_amount": "30",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "alice",
+          "bob",
+          "charlie"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "30",
+      "shares": {
+        "alice": "10",
+        "bob": "10",
+        "charlie": "10"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    }
+  ],
+  "paid": {
+    "alice": "60.00",
+    "bob": "60.00",
+    "charlie": "20"
+  },
+  "share": {
+    "alice": "30.00",
+    "bob": "50.00",
+    "charlie": "60.00"
+  },
+  "net": {
+    "alice": "30.00",
+    "bob": "10.00",
+    "charlie": "-40.00"
+  },
+  "settlements": [],
+  "errors": [
+    "breakfast: currency is unresolved",
+    "tickets: currency is unresolved"
+  ]
+}
