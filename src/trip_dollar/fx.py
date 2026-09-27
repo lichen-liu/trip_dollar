@@ -102,7 +102,7 @@ def fetch_rate(currency: str, base: str, requested: date, cache_path: Path) -> d
             if not isinstance(cache, dict):
                 raise ValueError
         except (ValueError, OSError) as exc:
-            raise FXError(f"Cannot read FX cache {cache_path}. Use a different --fx-cache path.") from exc
+            raise FXError(f"Cannot read FX cache {cache_path}. Repair the file or supply --fx explicitly.") from exc
     if key in cache:
         entry = cache[key]
         try:

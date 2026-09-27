@@ -17,13 +17,13 @@ Transactions #12–#76 therefore use ISK. No transaction override is needed.
 input. The older `output/literal-ledger.json` is retained only as a historical
 snapshot of the superseded input (before the ISK correction); do not use it for settlement.
 
-Participants are supplied in `config.json`; the CLI does not prompt interactively.
-The configuration also supplies base currency, FX rates and the default L/B split.
+The CLI takes participants, currency and default split as arguments. The example
+runner also supports the saved `config.json` through the Python API.
 
 Reproduce the corrected interpretation:
 
 ```sh
-.venv/bin/trip-dollar examples/iceland-2026/config.json examples/iceland-2026/raw.txt --raw-text --json
+.venv/bin/trip-dollar examples/iceland-2026/raw.txt --participants L B D M --base CAD --split L B --fx ISK=0.0113CAD
 .venv/bin/python examples/iceland-2026/run_ledger.py
 ```
 
