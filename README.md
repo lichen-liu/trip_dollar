@@ -23,6 +23,14 @@ PYTHONPATH=src python -m trip_dollar.cli examples/ledger.json examples/transacti
 
 The command exits with status `2` when an audit issue blocks settlement.
 
+## Continuous integration
+
+The GitHub Actions workflow in `.github/workflows/pytest.yml` runs the complete
+pytest suite only for pull requests targeting `main`, using Python 3.13 on Ubuntu.
+It installs the project with `python -m pip install -e '.[dev]'`
+and runs `python -m pytest -q`. A test failure fails the job.
+Pushes without a matching pull request and manual dispatch do not trigger CI.
+
 ## Configuration
 
 ```json
