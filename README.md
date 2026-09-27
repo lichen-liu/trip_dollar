@@ -26,9 +26,9 @@ The command exits with status `2` when an audit issue blocks settlement.
 ## Continuous integration
 
 The GitHub Actions workflow in `.github/workflows/pytest.yml` runs the complete
-pytest suite on every push and pull request using Python 3.11, 3.12, 3.13, and
-3.14 on Ubuntu. It installs the project with `python -m pip install -e '.[dev]'`
-and runs `python -m pytest -q`. A failure in any Python version fails that job.
+pytest suite on every push and pull request using Python 3.13 on Ubuntu.
+It installs the project with `python -m pip install -e '.[dev]'`
+and runs `python -m pytest -q`. A test failure fails the job.
 Manual runs are also available once the workflow is on the default branch.
 
 ## Configuration
