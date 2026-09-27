@@ -1,5 +1,18 @@
 # Trip Dollar
 
+## Real ledger example
+
+The [August 2026 Iceland example](examples/iceland-2026/README.md) contains a
+76-expense raw document, configuration for L/B/D/M, reproducible parsed output,
+an audit report, and reference arithmetic checked by `tests/test_document_import.py`.
+It exercises merchant labels, date headings, multiple expenses per line,
+currency carry-forward, and both all-participant and individual allocations.
+
+```bash
+.venv/bin/python examples/iceland-2026/run_ledger.py
+.venv/bin/python -m pytest tests/test_document_import.py -q
+```
+
 Trip Dollar is a configuration-driven Python expense ledger. It preserves the ordered raw stream, resolves stateful currency context, separates payer from economic allocation, converts to a configured base currency, verifies conservation, and only then produces settlement transfers.
 
 Nothing in the engine knows a trip location, a person's name, a fixed participant count, or a special real-world currency.
@@ -76,8 +89,14 @@ Each parsed transaction preserves its source text, source sequence and zero-base
 character span (end exclusive), alongside the extracted raw record. A supplied
 entry ID such as `line` becomes `line:1`, `line:2`, etc. when it contains multiple
 expenses; use these IDs for individual overrides. Date and description metadata
-on the source entry are copied to each expense. Arbitrary prose or date headings
-inside raw text are not automatically interpreted.
+on the source entry are copied to each expense.
+
+Text documents also support an optional `YYYY.Month.Title` heading, four-digit
+`MMDD` date headings, and `Merchant: records` lines. These headings supply metadata;
+they never change currency. Records before the first date heading retain an unknown
+date. Both `L100ISKA` (currency then allocation) and `L100A ISK` are accepted.
+Original source lines and character spans are preserved. Unknown nonempty lines
+remain validation errors rather than being silently skipped.
 
 Compact input uses:
 

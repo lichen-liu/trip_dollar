@@ -1,0 +1,18 @@
+{
+  "base_currency": "CAD",
+  "participants": [
+    {"id": "L", "code": "L"},
+    {"id": "B", "code": "B"},
+    {"id": "D", "code": "D"},
+    {"id": "M", "code": "M"}
+  ],
+  "fx_rates": {"CAD": "1", "ISK": "0.0113"},
+  "default_allocation": {"type": "equal_split", "participants": ["L", "B"]},
+  "fx_reference": {
+    "date": "2026-08-16",
+    "retrieved_on": "2026-09-27",
+    "source": "https://www.exchangerates.org.uk/ISK-CAD-spot-exchange-rates-history-2026.html",
+    "quote": "1 ISK = 0.0113 CAD",
+    "note": "Published historical close as displayed (rounded to four decimal places). This is a market reference, not a card or bank statement rate."
+  }
+}

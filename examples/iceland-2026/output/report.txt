@@ -1,0 +1,25 @@
+Status: SETTLEMENT_READY
+Base currency: CAD
+
+Balances
+Participant | Paid | Share | Net | Action
+--- | ---: | ---: | ---: | ---
+L | 7,654.47 | 6,024.42 | 1,630.06 | receive
+B | 14,602.61 | 6,006.67 | 8,595.94 | receive
+D | 1,756.11 | 5,991.05 | -4,234.94 | pay
+M | 0.00 | 5,991.05 | -5,991.05 | pay
+
+Settlements
+D -> B: 4,234.94 CAD
+M -> B: 4,360.99 CAD
+M -> L: 1,630.06 CAD
+
+Currency segments
+#1: CAD
+#2: ISK
+#3-#8: CAD
+#9: ISK
+#10-#11: CAD
+#12-#76: ISK
+
+Total expense: 24013.1940 CAD

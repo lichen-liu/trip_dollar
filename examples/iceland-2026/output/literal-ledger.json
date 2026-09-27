@@ -1,0 +1,3433 @@
+{
+  "status": "SETTLEMENT_READY",
+  "base_currency": "CAD",
+  "total_expense": "395577.5297",
+  "transactions": [
+    {
+      "id": "tx_001",
+      "sequence": 1,
+      "date": null,
+      "description": "YYZ-KEF",
+      "raw_text": "B10467.28CADA",
+      "source_text": "YYZ-KEF: B10467.28CADA",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 3,
+      "source_span": [
+        9,
+        22
+      ],
+      "payer_id": "B",
+      "payer_code": "B",
+      "original_amount": "10467.28",
+      "explicit_currency": "CAD",
+      "currency": "CAD",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "10467.28",
+      "shares": {
+        "L": "2616.82",
+        "B": "2616.82",
+        "D": "2616.82",
+        "M": "2616.82"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_002",
+      "sequence": 2,
+      "date": null,
+      "description": "Hertz",
+      "raw_text": "L294069ISKA",
+      "source_text": "Hertz: L294069ISKA",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 5,
+      "source_span": [
+        7,
+        18
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "294069",
+      "explicit_currency": "ISK",
+      "currency": "ISK",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "3322.9797",
+      "shares": {
+        "L": "830.744925",
+        "B": "830.744925",
+        "D": "830.744925",
+        "M": "830.744925"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_003",
+      "sequence": 3,
+      "date": null,
+      "description": "Paradise Cave Hostel & Guesthouse",
+      "raw_text": "B674.7CADA",
+      "source_text": "Paradise Cave Hostel & Guesthouse: B674.7CADA",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 7,
+      "source_span": [
+        35,
+        45
+      ],
+      "payer_id": "B",
+      "payer_code": "B",
+      "original_amount": "674.7",
+      "explicit_currency": "CAD",
+      "currency": "CAD",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "674.7",
+      "shares": {
+        "L": "168.675",
+        "B": "168.675",
+        "D": "168.675",
+        "M": "168.675"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_004",
+      "sequence": 4,
+      "date": null,
+      "description": "Brekka í Lóní Farm Stay",
+      "raw_text": "B610.78CADA",
+      "source_text": "Brekka í Lóní Farm Stay: B610.78CADA",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 8,
+      "source_span": [
+        25,
+        36
+      ],
+      "payer_id": "B",
+      "payer_code": "B",
+      "original_amount": "610.78",
+      "explicit_currency": "CAD",
+      "currency": "CAD",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "610.78",
+      "shares": {
+        "L": "152.695",
+        "B": "152.695",
+        "D": "152.695",
+        "M": "152.695"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_005",
+      "sequence": 5,
+      "date": null,
+      "description": "Guesthouse Stöng and Cottages",
+      "raw_text": "L446.75CADA",
+      "source_text": "Guesthouse Stöng and Cottages: L446.75CADA",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 9,
+      "source_span": [
+        31,
+        42
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "446.75",
+      "explicit_currency": "CAD",
+      "currency": "CAD",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "446.75",
+      "shares": {
+        "L": "111.6875",
+        "B": "111.6875",
+        "D": "111.6875",
+        "M": "111.6875"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_006",
+      "sequence": 6,
+      "date": null,
+      "description": "K16Apartments",
+      "raw_text": "B685.89CADA",
+      "source_text": "K16Apartments: B685.89CADA",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 10,
+      "source_span": [
+        15,
+        26
+      ],
+      "payer_id": "B",
+      "payer_code": "B",
+      "original_amount": "685.89",
+      "explicit_currency": "CAD",
+      "currency": "CAD",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "685.89",
+      "shares": {
+        "L": "171.4725",
+        "B": "171.4725",
+        "D": "171.4725",
+        "M": "171.4725"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_007",
+      "sequence": 7,
+      "date": null,
+      "description": "Ljosafoss Lake Guest House",
+      "raw_text": "L742.18CADA",
+      "source_text": "Ljosafoss Lake Guest House: L742.18CADA",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 11,
+      "source_span": [
+        28,
+        39
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "742.18",
+      "explicit_currency": "CAD",
+      "currency": "CAD",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "742.18",
+      "shares": {
+        "L": "185.545",
+        "B": "185.545",
+        "D": "185.545",
+        "M": "185.545"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_008",
+      "sequence": 8,
+      "date": null,
+      "description": "Golden Circle Cabins",
+      "raw_text": "B826CADA",
+      "source_text": "Golden Circle Cabins: B826CADA",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 12,
+      "source_span": [
+        22,
+        30
+      ],
+      "payer_id": "B",
+      "payer_code": "B",
+      "original_amount": "826",
+      "explicit_currency": "CAD",
+      "currency": "CAD",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "826",
+      "shares": {
+        "L": "206.5",
+        "B": "206.5",
+        "D": "206.5",
+        "M": "206.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_009",
+      "sequence": 9,
+      "date": null,
+      "description": "Hotel Vogar",
+      "raw_text": "L57700ISKA",
+      "source_text": "Hotel Vogar: L57700ISKA",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 13,
+      "source_span": [
+        13,
+        23
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "57700",
+      "explicit_currency": "ISK",
+      "currency": "ISK",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "652.0100",
+      "shares": {
+        "L": "163.0025",
+        "B": "163.0025",
+        "D": "163.0025",
+        "M": "163.0025"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_010",
+      "sequence": 10,
+      "date": null,
+      "description": "Hotel Viking",
+      "raw_text": "B591.96CADA",
+      "source_text": "Hotel Viking: B591.96CADA",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 14,
+      "source_span": [
+        14,
+        25
+      ],
+      "payer_id": "B",
+      "payer_code": "B",
+      "original_amount": "591.96",
+      "explicit_currency": "CAD",
+      "currency": "CAD",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "591.96",
+      "shares": {
+        "L": "147.99",
+        "B": "147.99",
+        "D": "147.99",
+        "M": "147.99"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_011",
+      "sequence": 11,
+      "date": null,
+      "description": "Zodiac Boat Tour on Jokulsarlon Glacier Lagoon",
+      "raw_text": "B746CADA",
+      "source_text": "Zodiac Boat Tour on Jokulsarlon Glacier Lagoon: B746CADA",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 16,
+      "source_span": [
+        48,
+        56
+      ],
+      "payer_id": "B",
+      "payer_code": "B",
+      "original_amount": "746",
+      "explicit_currency": "CAD",
+      "currency": "CAD",
+      "currency_source": "explicit",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "746",
+      "shares": {
+        "L": "186.5",
+        "B": "186.5",
+        "D": "186.5",
+        "M": "186.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_012",
+      "sequence": 12,
+      "date": "0808",
+      "description": "Clippers Fitjar",
+      "raw_text": "L4580A",
+      "source_text": "Clippers Fitjar: L4580A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 19,
+      "source_span": [
+        17,
+        23
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "4580",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "4580",
+      "shares": {
+        "L": "1145",
+        "B": "1145",
+        "D": "1145",
+        "M": "1145"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_013",
+      "sequence": 13,
+      "date": "0808",
+      "description": "Bonus",
+      "raw_text": "L5914A",
+      "source_text": "Bonus: L5914A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 20,
+      "source_span": [
+        7,
+        13
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "5914",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "5914",
+      "shares": {
+        "L": "1478.5",
+        "B": "1478.5",
+        "D": "1478.5",
+        "M": "1478.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_014",
+      "sequence": 14,
+      "date": "0808",
+      "description": "Fiska",
+      "raw_text": "D2908A",
+      "source_text": "Fiska: D2908A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 21,
+      "source_span": [
+        7,
+        13
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "2908",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "2908",
+      "shares": {
+        "L": "727",
+        "B": "727",
+        "D": "727",
+        "M": "727"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_015",
+      "sequence": 15,
+      "date": "0808",
+      "description": "KFC",
+      "raw_text": "D6757A",
+      "source_text": "KFC: D6757A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 22,
+      "source_span": [
+        5,
+        11
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "6757",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "6757",
+      "shares": {
+        "L": "1689.25",
+        "B": "1689.25",
+        "D": "1689.25",
+        "M": "1689.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_016",
+      "sequence": 16,
+      "date": "0808",
+      "description": "Seljalandsfoss",
+      "raw_text": "L900A",
+      "source_text": "Seljalandsfoss: L900A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 23,
+      "source_span": [
+        16,
+        21
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "900",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "900",
+      "shares": {
+        "L": "225",
+        "B": "225",
+        "D": "225",
+        "M": "225"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_017",
+      "sequence": 17,
+      "date": "0808",
+      "description": "Laufey Welcome Center",
+      "raw_text": "D879A",
+      "source_text": "Laufey Welcome Center: D879A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 24,
+      "source_span": [
+        23,
+        28
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "879",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "879",
+      "shares": {
+        "L": "219.75",
+        "B": "219.75",
+        "D": "219.75",
+        "M": "219.75"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_018",
+      "sequence": 18,
+      "date": "0808",
+      "description": "Skógafoss",
+      "raw_text": "L1089A",
+      "source_text": "Skógafoss: L1089A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 25,
+      "source_span": [
+        11,
+        17
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1089",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1089",
+      "shares": {
+        "L": "272.25",
+        "B": "272.25",
+        "D": "272.25",
+        "M": "272.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_019",
+      "sequence": 19,
+      "date": "0808",
+      "description": "Skogafoss Bistro Bar",
+      "raw_text": "L17300A",
+      "source_text": "Skogafoss Bistro Bar: L17300A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 26,
+      "source_span": [
+        22,
+        29
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "17300",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "17300",
+      "shares": {
+        "L": "4325",
+        "B": "4325",
+        "D": "4325",
+        "M": "4325"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_020",
+      "sequence": 20,
+      "date": "0808",
+      "description": "DC-3 Plane Wreck Eyvindarholt",
+      "raw_text": "L1089A",
+      "source_text": "DC-3 Plane Wreck Eyvindarholt: L1089A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 27,
+      "source_span": [
+        31,
+        37
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1089",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1089",
+      "shares": {
+        "L": "272.25",
+        "B": "272.25",
+        "D": "272.25",
+        "M": "272.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_021",
+      "sequence": 21,
+      "date": "0809",
+      "description": "Dyrhólaey",
+      "raw_text": "L839A",
+      "source_text": "Dyrhólaey: L839A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 30,
+      "source_span": [
+        11,
+        16
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "839",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "839",
+      "shares": {
+        "L": "209.75",
+        "B": "209.75",
+        "D": "209.75",
+        "M": "209.75"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_022",
+      "sequence": 22,
+      "date": "0809",
+      "description": "Reynisfjara",
+      "raw_text": "L1089A",
+      "source_text": "Reynisfjara: L1089A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 31,
+      "source_span": [
+        13,
+        19
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1089",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1089",
+      "shares": {
+        "L": "272.25",
+        "B": "272.25",
+        "D": "272.25",
+        "M": "272.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_023",
+      "sequence": 23,
+      "date": "0809",
+      "description": "Gas",
+      "raw_text": "L5543A",
+      "source_text": "Gas: L5543A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 32,
+      "source_span": [
+        5,
+        11
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "5543",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "5543",
+      "shares": {
+        "L": "1385.75",
+        "B": "1385.75",
+        "D": "1385.75",
+        "M": "1385.75"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_024",
+      "sequence": 24,
+      "date": "0809",
+      "description": "Kronan",
+      "raw_text": "L6419A",
+      "source_text": "Kronan: L6419A L1175A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 33,
+      "source_span": [
+        8,
+        14
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "6419",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "6419",
+      "shares": {
+        "L": "1604.75",
+        "B": "1604.75",
+        "D": "1604.75",
+        "M": "1604.75"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_025",
+      "sequence": 25,
+      "date": "0809",
+      "description": "Kronan",
+      "raw_text": "L1175A",
+      "source_text": "Kronan: L6419A L1175A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 33,
+      "source_span": [
+        15,
+        21
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1175",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1175",
+      "shares": {
+        "L": "293.75",
+        "B": "293.75",
+        "D": "293.75",
+        "M": "293.75"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_026",
+      "sequence": 26,
+      "date": "0809",
+      "description": "Fjaðrárgljúfur",
+      "raw_text": "L1089A",
+      "source_text": "Fjaðrárgljúfur: L1089A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 34,
+      "source_span": [
+        16,
+        22
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1089",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1089",
+      "shares": {
+        "L": "272.25",
+        "B": "272.25",
+        "D": "272.25",
+        "M": "272.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_027",
+      "sequence": 27,
+      "date": "0809",
+      "description": "Jökulsárlón",
+      "raw_text": "L1199A",
+      "source_text": "Jökulsárlón: L1199A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 35,
+      "source_span": [
+        13,
+        19
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1199",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1199",
+      "shares": {
+        "L": "299.75",
+        "B": "299.75",
+        "D": "299.75",
+        "M": "299.75"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_028",
+      "sequence": 28,
+      "date": "0809",
+      "description": "Ishusio Pizzeria",
+      "raw_text": "D6900A",
+      "source_text": "Ishusio Pizzeria: D6900A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 36,
+      "source_span": [
+        18,
+        24
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "6900",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "6900",
+      "shares": {
+        "L": "1725",
+        "B": "1725",
+        "D": "1725",
+        "M": "1725"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_029",
+      "sequence": 29,
+      "date": "0809",
+      "description": "Gas",
+      "raw_text": "L3904A",
+      "source_text": "Gas: L3904A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 37,
+      "source_span": [
+        5,
+        11
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "3904",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "3904",
+      "shares": {
+        "L": "976",
+        "B": "976",
+        "D": "976",
+        "M": "976"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_030",
+      "sequence": 30,
+      "date": "0809",
+      "description": "Stokksnes mirror beach",
+      "raw_text": "L4400A",
+      "source_text": "Stokksnes mirror beach: L4400A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 38,
+      "source_span": [
+        24,
+        30
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "4400",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "4400",
+      "shares": {
+        "L": "1100",
+        "B": "1100",
+        "D": "1100",
+        "M": "1100"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_031",
+      "sequence": 31,
+      "date": "0810",
+      "description": "Salt Cafe & Bistro",
+      "raw_text": "D13820A",
+      "source_text": "Salt Cafe & Bistro: D13820A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 41,
+      "source_span": [
+        20,
+        27
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "13820",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "13820",
+      "shares": {
+        "L": "3455",
+        "B": "3455",
+        "D": "3455",
+        "M": "3455"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_032",
+      "sequence": 32,
+      "date": "0810",
+      "description": "netto",
+      "raw_text": "D5738A",
+      "source_text": "netto: D5738A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 42,
+      "source_span": [
+        7,
+        13
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "5738",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "5738",
+      "shares": {
+        "L": "1434.5",
+        "B": "1434.5",
+        "D": "1434.5",
+        "M": "1434.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_033",
+      "sequence": 33,
+      "date": "0810",
+      "description": "Gas",
+      "raw_text": "L4179A",
+      "source_text": "Gas: L4179A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 43,
+      "source_span": [
+        5,
+        11
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "4179",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "4179",
+      "shares": {
+        "L": "1044.75",
+        "B": "1044.75",
+        "D": "1044.75",
+        "M": "1044.75"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_034",
+      "sequence": 34,
+      "date": "0810",
+      "description": "Stuðlagil Klaustursel",
+      "raw_text": "L1089A",
+      "source_text": "Stuðlagil Klaustursel: L1089A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 44,
+      "source_span": [
+        23,
+        29
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1089",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1089",
+      "shares": {
+        "L": "272.25",
+        "B": "272.25",
+        "D": "272.25",
+        "M": "272.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_035",
+      "sequence": 35,
+      "date": "0810",
+      "description": "Krambudin",
+      "raw_text": "L2396A",
+      "source_text": "Krambudin: L2396A D2206A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 45,
+      "source_span": [
+        11,
+        17
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "2396",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "2396",
+      "shares": {
+        "L": "599",
+        "B": "599",
+        "D": "599",
+        "M": "599"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_036",
+      "sequence": 36,
+      "date": "0810",
+      "description": "Krambudin",
+      "raw_text": "D2206A",
+      "source_text": "Krambudin: L2396A D2206A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 45,
+      "source_span": [
+        18,
+        24
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "2206",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "2206",
+      "shares": {
+        "L": "551.5",
+        "B": "551.5",
+        "D": "551.5",
+        "M": "551.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_037",
+      "sequence": 37,
+      "date": "0810",
+      "description": "Gas",
+      "raw_text": "L3537A",
+      "source_text": "Gas: L3537A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 46,
+      "source_span": [
+        5,
+        11
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "3537",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "3537",
+      "shares": {
+        "L": "884.25",
+        "B": "884.25",
+        "D": "884.25",
+        "M": "884.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_038",
+      "sequence": 38,
+      "date": "0810",
+      "description": "Little Fish Company",
+      "raw_text": "L3490A",
+      "source_text": "Little Fish Company: L3490A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 47,
+      "source_span": [
+        21,
+        27
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "3490",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "3490",
+      "shares": {
+        "L": "872.5",
+        "B": "872.5",
+        "D": "872.5",
+        "M": "872.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_039",
+      "sequence": 39,
+      "date": "0811",
+      "description": "Gentle Giants GG2",
+      "raw_text": "L87960A",
+      "source_text": "Gentle Giants GG2: L87960A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 50,
+      "source_span": [
+        19,
+        26
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "87960",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "87960",
+      "shares": {
+        "L": "21990",
+        "B": "21990",
+        "D": "21990",
+        "M": "21990"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_040",
+      "sequence": 40,
+      "date": "0811",
+      "description": "Lokal Cafe",
+      "raw_text": "L3750A",
+      "source_text": "Lokal Cafe: L3750A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 51,
+      "source_span": [
+        12,
+        18
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "3750",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "3750",
+      "shares": {
+        "L": "937.5",
+        "B": "937.5",
+        "D": "937.5",
+        "M": "937.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_041",
+      "sequence": 41,
+      "date": "0811",
+      "description": "Leirhnjukur & Viti",
+      "raw_text": "L1200A",
+      "source_text": "Leirhnjukur & Viti: L1200A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 52,
+      "source_span": [
+        20,
+        26
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1200",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1200",
+      "shares": {
+        "L": "300",
+        "B": "300",
+        "D": "300",
+        "M": "300"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_042",
+      "sequence": 42,
+      "date": "0811",
+      "description": "Hverir",
+      "raw_text": "L1400A",
+      "source_text": "Hverir: L1400A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 53,
+      "source_span": [
+        8,
+        14
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1400",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1400",
+      "shares": {
+        "L": "350",
+        "B": "350",
+        "D": "350",
+        "M": "350"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_043",
+      "sequence": 43,
+      "date": "0811",
+      "description": "Hverfjall",
+      "raw_text": "L1289A",
+      "source_text": "Hverfjall: L1289A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 54,
+      "source_span": [
+        11,
+        17
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1289",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1289",
+      "shares": {
+        "L": "322.25",
+        "B": "322.25",
+        "D": "322.25",
+        "M": "322.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_044",
+      "sequence": 44,
+      "date": "0811",
+      "description": "Kronan",
+      "raw_text": "D14136A",
+      "source_text": "Kronan: D14136A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 55,
+      "source_span": [
+        8,
+        15
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "14136",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "14136",
+      "shares": {
+        "L": "3534",
+        "B": "3534",
+        "D": "3534",
+        "M": "3534"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_045",
+      "sequence": 45,
+      "date": "0811",
+      "description": "Gas",
+      "raw_text": "L3368A",
+      "source_text": "Gas: L3368A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 56,
+      "source_span": [
+        5,
+        11
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "3368",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "3368",
+      "shares": {
+        "L": "842",
+        "B": "842",
+        "D": "842",
+        "M": "842"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_046",
+      "sequence": 46,
+      "date": "0811",
+      "description": "Krua Siam",
+      "raw_text": "D14700A",
+      "source_text": "Krua Siam: D14700A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 57,
+      "source_span": [
+        11,
+        18
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "14700",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "14700",
+      "shares": {
+        "L": "3675",
+        "B": "3675",
+        "D": "3675",
+        "M": "3675"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_047",
+      "sequence": 47,
+      "date": "0812",
+      "description": "Bonus",
+      "raw_text": "L858A",
+      "source_text": "Bonus: L858A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 60,
+      "source_span": [
+        7,
+        12
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "858",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "858",
+      "shares": {
+        "L": "214.5",
+        "B": "214.5",
+        "D": "214.5",
+        "M": "214.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_048",
+      "sequence": 48,
+      "date": "0812",
+      "description": "Gas",
+      "raw_text": "L4941A",
+      "source_text": "Gas: L4941A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 61,
+      "source_span": [
+        5,
+        11
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "4941",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "4941",
+      "shares": {
+        "L": "1235.25",
+        "B": "1235.25",
+        "D": "1235.25",
+        "M": "1235.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_049",
+      "sequence": 49,
+      "date": "0812",
+      "description": "Ytri-Tungu",
+      "raw_text": "L900A",
+      "source_text": "Ytri-Tungu: L900A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 62,
+      "source_span": [
+        12,
+        17
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "900",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "900",
+      "shares": {
+        "L": "225",
+        "B": "225",
+        "D": "225",
+        "M": "225"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_050",
+      "sequence": 50,
+      "date": "0812",
+      "description": "Gas",
+      "raw_text": "L3888A",
+      "source_text": "Gas: L3888A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 63,
+      "source_span": [
+        5,
+        11
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "3888",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "3888",
+      "shares": {
+        "L": "972",
+        "B": "972",
+        "D": "972",
+        "M": "972"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_051",
+      "sequence": 51,
+      "date": "0813",
+      "description": "Bingvellir",
+      "raw_text": "L1000A",
+      "source_text": "Bingvellir: L1000A L1000A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 66,
+      "source_span": [
+        12,
+        18
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1000",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1000",
+      "shares": {
+        "L": "250",
+        "B": "250",
+        "D": "250",
+        "M": "250"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_052",
+      "sequence": 52,
+      "date": "0813",
+      "description": "Bingvellir",
+      "raw_text": "L1000A",
+      "source_text": "Bingvellir: L1000A L1000A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 66,
+      "source_span": [
+        19,
+        25
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1000",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1000",
+      "shares": {
+        "L": "250",
+        "B": "250",
+        "D": "250",
+        "M": "250"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_053",
+      "sequence": 53,
+      "date": "0813",
+      "description": "Geysir",
+      "raw_text": "L1169A",
+      "source_text": "Geysir: L1169A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 67,
+      "source_span": [
+        8,
+        14
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1169",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1169",
+      "shares": {
+        "L": "292.25",
+        "B": "292.25",
+        "D": "292.25",
+        "M": "292.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_054",
+      "sequence": 54,
+      "date": "0813",
+      "description": "Geysir Glyma",
+      "raw_text": "D10720A",
+      "source_text": "Geysir Glyma: D10720A L1370L L3280A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 68,
+      "source_span": [
+        14,
+        21
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "10720",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "10720",
+      "shares": {
+        "L": "2680",
+        "B": "2680",
+        "D": "2680",
+        "M": "2680"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_055",
+      "sequence": 55,
+      "date": "0813",
+      "description": "Geysir Glyma",
+      "raw_text": "L1370L",
+      "source_text": "Geysir Glyma: D10720A L1370L L3280A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 68,
+      "source_span": [
+        22,
+        28
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1370",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "single",
+        "participants": [
+          "L"
+        ],
+        "weights": [
+          "1"
+        ]
+      },
+      "base_amount": "1370",
+      "shares": {
+        "L": "1370"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_056",
+      "sequence": 56,
+      "date": "0813",
+      "description": "Geysir Glyma",
+      "raw_text": "L3280A",
+      "source_text": "Geysir Glyma: D10720A L1370L L3280A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 68,
+      "source_span": [
+        29,
+        35
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "3280",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "3280",
+      "shares": {
+        "L": "820",
+        "B": "820",
+        "D": "820",
+        "M": "820"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_057",
+      "sequence": 57,
+      "date": "0813",
+      "description": "Brúarfoss",
+      "raw_text": "L839A",
+      "source_text": "Brúarfoss: L839A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 69,
+      "source_span": [
+        11,
+        16
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "839",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "839",
+      "shares": {
+        "L": "209.75",
+        "B": "209.75",
+        "D": "209.75",
+        "M": "209.75"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_058",
+      "sequence": 58,
+      "date": "0813",
+      "description": "Kronan",
+      "raw_text": "D18588A",
+      "source_text": "Kronan: D18588A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 70,
+      "source_span": [
+        8,
+        15
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "18588",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "18588",
+      "shares": {
+        "L": "4647",
+        "B": "4647",
+        "D": "4647",
+        "M": "4647"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_059",
+      "sequence": 59,
+      "date": "0813",
+      "description": "KFC",
+      "raw_text": "D8126A",
+      "source_text": "KFC: D8126A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 71,
+      "source_span": [
+        5,
+        11
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "8126",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "8126",
+      "shares": {
+        "L": "2031.5",
+        "B": "2031.5",
+        "D": "2031.5",
+        "M": "2031.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_060",
+      "sequence": 60,
+      "date": "0813",
+      "description": "Gas",
+      "raw_text": "L3439A",
+      "source_text": "Gas: L3439A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 72,
+      "source_span": [
+        5,
+        11
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "3439",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "3439",
+      "shares": {
+        "L": "859.75",
+        "B": "859.75",
+        "D": "859.75",
+        "M": "859.75"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_061",
+      "sequence": 61,
+      "date": "0814",
+      "description": "Volcano Skáli",
+      "raw_text": "L1089A",
+      "source_text": "Volcano Skáli: L1089A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 75,
+      "source_span": [
+        15,
+        21
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1089",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1089",
+      "shares": {
+        "L": "272.25",
+        "B": "272.25",
+        "D": "272.25",
+        "M": "272.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_062",
+      "sequence": 62,
+      "date": "0814",
+      "description": "Seltún Hot Springs",
+      "raw_text": "L750A",
+      "source_text": "Seltún Hot Springs: L750A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 76,
+      "source_span": [
+        20,
+        25
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "750",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "750",
+      "shares": {
+        "L": "187.5",
+        "B": "187.5",
+        "D": "187.5",
+        "M": "187.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_063",
+      "sequence": 63,
+      "date": "0814",
+      "description": "Asahi Wok",
+      "raw_text": "D9470A",
+      "source_text": "Asahi Wok: D9470A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 77,
+      "source_span": [
+        11,
+        17
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "9470",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "9470",
+      "shares": {
+        "L": "2367.5",
+        "B": "2367.5",
+        "D": "2367.5",
+        "M": "2367.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_064",
+      "sequence": 64,
+      "date": "0815",
+      "description": "Reykjavik Roasters",
+      "raw_text": "L1820",
+      "source_text": "Reykjavik Roasters: L1820",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 80,
+      "source_span": [
+        20,
+        25
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1820",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "equal_split",
+        "participants": [
+          "L",
+          "B"
+        ],
+        "weights": [
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1820",
+      "shares": {
+        "L": "910",
+        "B": "910"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_065",
+      "sequence": 65,
+      "date": "0815",
+      "description": "Frakkastigur",
+      "raw_text": "L1780A",
+      "source_text": "Frakkastigur: L1780A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 81,
+      "source_span": [
+        14,
+        20
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1780",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1780",
+      "shares": {
+        "L": "445",
+        "B": "445",
+        "D": "445",
+        "M": "445"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_066",
+      "sequence": 66,
+      "date": "0815",
+      "description": "Messinn",
+      "raw_text": "D22500A",
+      "source_text": "Messinn: D22500A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 82,
+      "source_span": [
+        9,
+        16
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "22500",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "22500",
+      "shares": {
+        "L": "5625",
+        "B": "5625",
+        "D": "5625",
+        "M": "5625"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_067",
+      "sequence": 67,
+      "date": "0815",
+      "description": "Mokka Kaffi",
+      "raw_text": "L945",
+      "source_text": "Mokka Kaffi: L945",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 83,
+      "source_span": [
+        13,
+        17
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "945",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "equal_split",
+        "participants": [
+          "L",
+          "B"
+        ],
+        "weights": [
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "945",
+      "shares": {
+        "L": "472.5",
+        "B": "472.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_068",
+      "sequence": 68,
+      "date": "0815",
+      "description": "P2 Parking",
+      "raw_text": "L1510A",
+      "source_text": "P2 Parking: L1510A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 84,
+      "source_span": [
+        12,
+        18
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1510",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1510",
+      "shares": {
+        "L": "377.5",
+        "B": "377.5",
+        "D": "377.5",
+        "M": "377.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_069",
+      "sequence": 69,
+      "date": "0815",
+      "description": "Fine Restaurant",
+      "raw_text": "D17960A",
+      "source_text": "Fine Restaurant: D17960A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 85,
+      "source_span": [
+        17,
+        24
+      ],
+      "payer_id": "D",
+      "payer_code": "D",
+      "original_amount": "17960",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "17960",
+      "shares": {
+        "L": "4490",
+        "B": "4490",
+        "D": "4490",
+        "M": "4490"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_070",
+      "sequence": 70,
+      "date": "0816",
+      "description": "BBP Hotdog",
+      "raw_text": "L1840A",
+      "source_text": "BBP Hotdog: L1840A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 88,
+      "source_span": [
+        12,
+        18
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1840",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1840",
+      "shares": {
+        "L": "460",
+        "B": "460",
+        "D": "460",
+        "M": "460"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_071",
+      "sequence": 71,
+      "date": "0816",
+      "description": "Icelandic Street Food",
+      "raw_text": "L7000A",
+      "source_text": "Icelandic Street Food: L7000A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 89,
+      "source_span": [
+        23,
+        29
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "7000",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "7000",
+      "shares": {
+        "L": "1750",
+        "B": "1750",
+        "D": "1750",
+        "M": "1750"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_072",
+      "sequence": 72,
+      "date": "0816",
+      "description": "P2 Parking",
+      "raw_text": "L435A",
+      "source_text": "P2 Parking: L435A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 90,
+      "source_span": [
+        12,
+        17
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "435",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "435",
+      "shares": {
+        "L": "108.75",
+        "B": "108.75",
+        "D": "108.75",
+        "M": "108.75"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_073",
+      "sequence": 73,
+      "date": "0816",
+      "description": "Reykjanes Lighthouse",
+      "raw_text": "L1089A",
+      "source_text": "Reykjanes Lighthouse: L1089A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 91,
+      "source_span": [
+        22,
+        28
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "1089",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "1089",
+      "shares": {
+        "L": "272.25",
+        "B": "272.25",
+        "D": "272.25",
+        "M": "272.25"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_074",
+      "sequence": 74,
+      "date": "0816",
+      "description": "Gas",
+      "raw_text": "L6524A",
+      "source_text": "Gas: L6524A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 92,
+      "source_span": [
+        5,
+        11
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "6524",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "6524",
+      "shares": {
+        "L": "1631",
+        "B": "1631",
+        "D": "1631",
+        "M": "1631"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_075",
+      "sequence": 75,
+      "date": "0816",
+      "description": "Elda",
+      "raw_text": "L200L",
+      "source_text": "Elda: L200L",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 93,
+      "source_span": [
+        6,
+        11
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "200",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "single",
+        "participants": [
+          "L"
+        ],
+        "weights": [
+          "1"
+        ]
+      },
+      "base_amount": "200",
+      "shares": {
+        "L": "200"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    },
+    {
+      "id": "tx_076",
+      "sequence": 76,
+      "date": "0816",
+      "description": "Yuzu Burger",
+      "raw_text": "L2550A",
+      "source_text": "Yuzu Burger: L2550A",
+      "source_title": "2026.Aug.Iceland",
+      "source_sequence": 94,
+      "source_span": [
+        13,
+        19
+      ],
+      "payer_id": "L",
+      "payer_code": "L",
+      "original_amount": "2550",
+      "explicit_currency": null,
+      "currency": "CAD",
+      "currency_source": "inherited",
+      "allocation": {
+        "type": "all_equal",
+        "participants": [
+          "L",
+          "B",
+          "D",
+          "M"
+        ],
+        "weights": [
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "base_amount": "2550",
+      "shares": {
+        "L": "637.5",
+        "B": "637.5",
+        "D": "637.5",
+        "M": "637.5"
+      },
+      "override_applied": false,
+      "status": "VALID",
+      "errors": []
+    }
+  ],
+  "paid": {
+    "L": "225566.9197",
+    "B": "14602.61",
+    "D": "155408",
+    "M": "0"
+  },
+  "share": {
+    "L": "100763.132425",
+    "B": "99193.132425",
+    "D": "97810.632425",
+    "M": "97810.632425"
+  },
+  "net": {
+    "L": "124803.787275",
+    "B": "-84590.522425",
+    "D": "57597.367575",
+    "M": "-97810.632425"
+  },
+  "settlements": [
+    {
+      "from": "B",
+      "to": "D",
+      "amount": "57597.367575"
+    },
+    {
+      "from": "B",
+      "to": "L",
+      "amount": "26993.154850"
+    },
+    {
+      "from": "M",
+      "to": "L",
+      "amount": "97810.632425"
+    }
+  ],
+  "errors": []
+}
