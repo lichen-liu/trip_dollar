@@ -48,6 +48,7 @@ class LedgerEngine:
                     notes=raw.get("notes"),
                     base_currency=self.config.base_currency,
                     source_text=raw.get("source_text", raw.get("raw_text", "")),
+                    source_title=raw.get("source_title"),
                     source_sequence=raw.get("source_sequence", sequence),
                     source_span=raw.get("source_span"),
                 )

@@ -37,16 +37,19 @@ def split_compact(text: str, config: LedgerConfig) -> list[tuple[int, int, Parse
             allocations.append((end + 1, text[end]))
         found = []
         for allocation_end, token in allocations:
-            endings = [(allocation_end, None)]
+            endings = [(allocation_end, None, token)]
             currency_start = allocation_end
             while currency_start < len(text) and text[currency_start].isspace():
                 currency_start += 1
             for currency in config.fx_rates:
                 if text[currency_start:currency_start + len(currency)].upper() == currency:
-                    endings.append((currency_start + len(currency), currency))
-            for record_end, currency in endings:
+                    currency_end = currency_start + len(currency)
+                    endings.append((currency_end, currency, token))
+                    if token is None and currency_end < len(text) and text[currency_end] in codes | {"A"}:
+                        endings.append((currency_end + 1, currency, text[currency_end]))
+            for record_end, currency, allocation_token in endings:
                 for tail in paths.get(record_end, []):
-                    fields = ParsedFields(text[start], Decimal(match.group()), token, currency)
+                    fields = ParsedFields(text[start], Decimal(match.group()), allocation_token, currency)
                     candidate = ((start, record_end, fields),) + tail
                     if candidate not in found:
                         found.append(candidate)
@@ -65,9 +68,50 @@ def split_compact(text: str, config: LedgerConfig) -> list[tuple[int, int, Parse
     return list(matches[0])
 
 
+def import_document(text: str) -> list[dict[str, Any]]:
+    """Import existing notes: optional YYYY.Month.Title, MMDD headings, merchant: records.
+
+    Unknown nonempty lines remain records so they cannot silently disappear.
+    Source line numbers and text are preserved; dates never reorder the stream.
+    """
+    records = []
+    current_date = None
+    title = None
+    for line_number, line in enumerate(text.splitlines(), 1):
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if title is None and not records and re.fullmatch(r"\d{4}\.[A-Za-z]+\..+", stripped):
+            title = line
+            continue
+        if re.fullmatch(r"(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])", stripped):
+            current_date = stripped
+            continue
+        description = None
+        offset = 0
+        payload = line
+        if ":" in line:
+            description, payload = line.split(":", 1)
+            description = description.strip()
+            offset = line.index(":") + 1
+        records.append({
+            "raw_text": payload,
+            "date": current_date,
+            "description": description,
+            "source_text": line,
+            "source_sequence": line_number,
+            "source_title": title,
+            "_source_offset": offset,
+        })
+    return records
+
+
 def expand_records(raw_transactions, config):
     if isinstance(raw_transactions, str):
-        raw_transactions = [{"raw_text": raw_transactions}]
+        if ":" in raw_transactions or re.search(r"(?m)^\s*\d{4}(?:\.[A-Za-z]+\..+)?\s*$", raw_transactions):
+            raw_transactions = import_document(raw_transactions)
+        else:
+            raw_transactions = [{"raw_text": raw_transactions}]
     for source_sequence, raw in enumerate(raw_transactions, 1):
         raw = {"raw_text": raw} if isinstance(raw, str) else dict(raw)
         if "payer_code" in raw or "amount" in raw:
@@ -85,11 +129,13 @@ def expand_records(raw_transactions, config):
         for index, (start, end, fields) in enumerate(records, 1):
             item = dict(raw)
             item["_fields"] = fields
-            item["source_text"] = text
-            item["source_sequence"] = source_sequence
-            item["source_span"] = (start, end)
-            if len(records) > 1:
+            item["source_text"] = raw.get("source_text", text)
+            item["source_sequence"] = raw.get("source_sequence", source_sequence)
+            offset = raw.get("_source_offset", 0)
+            item["source_span"] = (start + offset, end + offset)
+            if len(records) > 1 or "_source_offset" in raw:
                 item["raw_text"] = text[start:end]
+            if len(records) > 1:
                 if "id" in raw:
                     item["id"] = f"{raw['id']}:{index}"
             yield item

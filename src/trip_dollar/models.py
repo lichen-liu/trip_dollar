@@ -83,6 +83,7 @@ class NormalizedTransaction:
     status: TransactionStatus = TransactionStatus.VALID
     errors: list[str] = field(default_factory=list)
     source_text: str = ""
+    source_title: str | None = None
     source_sequence: int | None = None
     source_span: tuple[int, int] | None = None
 
@@ -126,6 +127,7 @@ class LedgerResult:
                     "description": tx.description,
                     "raw_text": tx.raw_text,
                     "source_text": tx.source_text,
+                    "source_title": tx.source_title,
                     "source_sequence": tx.source_sequence,
                     "source_span": tx.source_span,
                     "payer_id": tx.payer_id,
