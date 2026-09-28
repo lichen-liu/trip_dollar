@@ -8,7 +8,7 @@ from typing import Any
 from .models import Allocation, LedgerConfig
 
 
-def split_compact(text: str, config: LedgerConfig) -> list[tuple[int, int, ParsedFields]]:
+def split_compact(text: str, config: LedgerConfig, *, discover_currencies: bool = False) -> list[tuple[int, int, ParsedFields]]:
     """Find a unique complete interpretation. Never discard unrecognized text.
 
     Offsets refer to the original source. Two complete parses are enough to
@@ -41,7 +41,13 @@ def split_compact(text: str, config: LedgerConfig) -> list[tuple[int, int, Parse
             currency_start = allocation_end
             while currency_start < len(text) and text[currency_start].isspace():
                 currency_start += 1
-            for currency in config.fx_rates:
+            currencies = set(config.fx_rates)
+            known_at_amount = any(text[end:end + len(code)].upper() == code for code in config.fx_rates)
+            if discover_currencies and not (token is not None and known_at_amount):
+                candidate = text[currency_start:currency_start + 3]
+                if re.fullmatch(r"[A-Z]{3}", candidate):
+                    currencies.add(candidate)
+            for currency in sorted(currencies):
                 if text[currency_start:currency_start + len(currency)].upper() == currency:
                     currency_end = currency_start + len(currency)
                     endings.append((currency_end, currency, token))
@@ -106,7 +112,7 @@ def import_document(text: str) -> list[dict[str, Any]]:
     return records
 
 
-def expand_records(raw_transactions, config):
+def expand_records(raw_transactions, config, *, discover_currencies: bool = False):
     if isinstance(raw_transactions, str):
         if ":" in raw_transactions or re.search(r"(?m)^\s*\d{4}(?:\.[A-Za-z]+\..+)?\s*$", raw_transactions):
             raw_transactions = import_document(raw_transactions)
@@ -114,12 +120,12 @@ def expand_records(raw_transactions, config):
             raw_transactions = [{"raw_text": raw_transactions}]
     for source_sequence, raw in enumerate(raw_transactions, 1):
         raw = {"raw_text": raw} if isinstance(raw, str) else dict(raw)
-        if "payer_code" in raw or "amount" in raw:
+        if "payer_code" in raw or "amount" in raw or "_fields" in raw:
             yield raw
             continue
         text = str(raw.get("raw_text", ""))
         try:
-            records = split_compact(text, config)
+            records = split_compact(text, config, discover_currencies=discover_currencies)
         except ValueError as exc:
             # Preserve legacy single-record diagnostics, but never guess ambiguity.
             if "ambiguous" in str(exc):
