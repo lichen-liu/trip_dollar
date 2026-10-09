@@ -40,14 +40,17 @@ Python-formatted values in `display`. `report.py` owns monetary display
 formatting. Invalid input produces an error response with no payment plan.
 
 Requests run synchronously in Waitress's four threads. The server limits request
-size, checks supplied origins, accepts only configured loopback hosts and uses
+size, checks supplied origins, validates configured hostnames and uses
 a self-only content security policy. It binds to `127.0.0.1:8000` by default;
-`--port` changes the port. Permanent Mac deployment, public hosting and access
-control are not configured by this feature.
+`--port` changes the port. The separate manual deployment profile allows the
+configured public hostname, trusts HTTPS forwarding only from the loopback
+connector and limits concurrent calculations. The [deployment plan](../deployment/README.md)
+covers public routing and manual supervision without login/boot startup.
 
-There is no database, account system or background queue. Notes are processed
+There is no database, account system or background calculation queue. Notes are processed
 in request memory and remain in the browser until cleared or the page is
-reloaded. Only `.trip-dollar/fx-cache.json` is persisted by the server. Missing
+reloaded. The local profile caches FX in `.trip-dollar/fx-cache.json`; the installed
+profile uses its private runtime's `state/fx-cache.json` and operational logs. Missing
 rates use the Frankfurter ECB feed; only currency codes and dates go to that
 provider. Manual rates avoid network access when all required pairs are supplied.
 Cache writes are atomic, and a process-local lock serializes shared cache

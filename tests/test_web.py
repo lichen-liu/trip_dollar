@@ -4,6 +4,8 @@ from decimal import Decimal
 import hashlib
 import json
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
+from threading import Event
 
 import pytest
 
@@ -228,3 +230,36 @@ def test_busy_port_is_a_clean_startup_error(monkeypatch, capsys):
         main([])
     assert exc.value.code == 2
     assert "different --port" in capsys.readouterr().err
+
+
+def test_busy_calculations_do_not_block_health_or_leak_slots(payload, monkeypatch):
+    import trip_dollar.server.app as server
+
+    app = create_app({"TESTING": True, "MAX_CONCURRENT_CALCULATIONS": 1})
+    entered, release = Event(), Event()
+    original = server.calculate
+    def blocked(*args, **kwargs):
+        entered.set()
+        assert release.wait(5), "Test did not release the calculation"
+        return original(*args, **kwargs)
+    monkeypatch.setattr(server, "calculate", blocked)
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        first = pool.submit(lambda: app.test_client().post("/api/calculate", json=payload))
+        try:
+            assert entered.wait(5)
+            client = app.test_client()
+            busy = client.post("/api/calculate", json=payload)
+            assert busy.status_code == 503
+            assert busy.json["settlements"] == []
+            assert busy.headers["Retry-After"] == "2"
+            assert client.get("/health").status_code == 200
+        finally:
+            release.set()
+        assert first.result(timeout=5).status_code == 200
+    assert app.test_client().post("/api/calculate", json=payload).status_code == 200
+
+
+def test_failed_request_releases_calculation_slot(payload):
+    client = create_app({"TESTING": True, "MAX_CONCURRENT_CALCULATIONS": 1}).test_client()
+    assert client.post("/api/calculate", json={}).status_code == 422
+    assert client.post("/api/calculate", json=payload).status_code == 200

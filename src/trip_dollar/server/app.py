@@ -6,8 +6,9 @@ from datetime import date
 from decimal import Decimal, DecimalException
 from pathlib import Path
 from string import ascii_letters
+from threading import BoundedSemaphore
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, g, jsonify, render_template, request
 from werkzeug.exceptions import HTTPException
 
 from ..core.service import InputError, LedgerOptions, calculate
@@ -79,9 +80,29 @@ def create_app(config: dict | None = None) -> Flask:
     app = Flask(__name__, template_folder=str(frontend / "templates"),
                 static_folder=str(frontend / "static"), static_url_path="/static")
     app.config.update(MAX_CONTENT_LENGTH=128_000, FX_CACHE=Path(".trip-dollar/fx-cache.json"),
-                      TRUSTED_HOSTS=["localhost", "127.0.0.1", "[::1]"])
+                      TRUSTED_HOSTS=["localhost", "127.0.0.1", "[::1]"],
+                      MAX_CONCURRENT_CALCULATIONS=2)
     if config:
         app.config.update(config)
+    capacity = app.config["MAX_CONCURRENT_CALCULATIONS"]
+    if not isinstance(capacity, int) or isinstance(capacity, bool) or capacity < 1:
+        raise ValueError("Calculation capacity must be a positive integer.")
+    slots = BoundedSemaphore(capacity)
+
+    @app.before_request
+    def admit_calculation():
+        if request.endpoint == "calculate_ledger" and request.method == "POST":
+            if not slots.acquire(blocking=False):
+                response = jsonify(error="The calculator is busy. Please try again shortly.", settlements=[])
+                response.status_code = 503
+                response.headers["Retry-After"] = "2"
+                return response
+            g.calculation_slot = True
+
+    @app.teardown_request
+    def release_calculation(error):
+        if g.pop("calculation_slot", False):
+            slots.release()
 
     @app.after_request
     def response_headers(response):

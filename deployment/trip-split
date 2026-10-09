@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+trip_split_root="$HOME/Library/Application Support/Trip Split"
+if [ ! -x "$trip_split_root/venv/bin/python" ]; then
+    case "${1:-}" in
+        stop|status) exec python3 "$(dirname "$0")/manage.py" "$@" ;;
+    esac
+    echo "Install first: python3 installation/install.py" >&2
+    exit 1
+fi
+exec "$trip_split_root/venv/bin/python" "$trip_split_root/manage.py" "$@"

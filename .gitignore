@@ -6,3 +6,10 @@ dist/
 build/
 *.egg-info/
 .trip-dollar/
+.cloudflared/
+.env
+.env.*
+!.env.example
+tunnel-token
+*.pem
+*.key

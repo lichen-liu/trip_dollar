@@ -50,7 +50,10 @@ their copyright notices and SIL Open Font Licenses are included in
 This command runs in the foreground, binds only to loopback, and stops with
 Ctrl+C. `--port 8080` changes the port. Nothing installs a macOS background
 service or exposes the app to the network. Deployment on the Mac is a separate
-step; remote access will need an explicit access/security setup.
+step. See the [installation guide](installation/README.md) and
+[manual-only Cloudflare deployment plan](deployment/README.md). The installed
+profile supports public access with automatic restart only after a manual start;
+manual stop unloads supervision. No login or boot startup is installed.
 
 ### Command line
 
@@ -128,8 +131,9 @@ trip-dollar examples/iceland-2026/raw.txt --participants L B D M --base CAD --sp
 pytest
 ```
 
-CI runs pytest on Python 3.13 for pull requests targeting `main`. Tests do not
-depend on live exchange-rate services.
+CI runs pytest on Python 3.13 when you manually add a label to a PR targeting
+`main`, and automatically after `main` changes. See the [CI guide](.github/README.md)
+for requesting a fresh required check. Tests do not depend on live exchange-rate services.
 
 ## Project layout
 
@@ -145,6 +149,10 @@ src/trip_dollar/
 The [architecture README](docs/README.md) describes the server architecture
 and parser/calculation flow. The core does not import the web server or require
 Flask; the frontend never calculates monetary balances or payments.
+
+`installation/` installs a private app snapshot; `deployment/` contains the
+manual start/stop controller, serving profile and free-tier deployment plan.
+Credentials, installed packages, logs and cache are outside the public repo.
 
 ## Python API
 
