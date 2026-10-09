@@ -1,6 +1,7 @@
 """The web boundary must use the same accounting and failure policy as the CLI."""
 from datetime import date
 from decimal import Decimal
+from html.parser import HTMLParser
 import hashlib
 import json
 from pathlib import Path
@@ -35,6 +36,7 @@ def test_page_and_assets(client):
     response = client.get("/")
     assert response.status_code == 200
     assert b"Calculate the split" in response.data
+    assert b"C500LC" in response.data
     assert "frame-ancestors 'none'" in response.headers["Content-Security-Policy"]
     assert response.headers["Cache-Control"] == "no-store"
     assert response.headers["X-Content-Type-Options"] == "nosniff"
@@ -61,6 +63,52 @@ def test_boboji_brand_and_self_hosted_aerorepo_fonts(client):
     assert 'font-family: "Manrope"' in css and 'font-family: "DM Mono"' in css
     assert "fonts.googleapis.com" not in css
     assert "Georgia" not in css
+
+
+def test_format_guide_examples_work_with_the_real_request_handler(client):
+    class GuideExamples(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.context = None
+            self.in_code = False
+            self.text = ""
+            self.examples = []
+
+        def handle_starttag(self, tag, attrs):
+            classes = dict(attrs).get("class", "").split()
+            if (tag == "div" and "syntax-example" in classes) or (tag == "pre" and "syntax-block" in classes):
+                self.context = tag
+            if tag == "code" and self.context:
+                self.in_code = True
+                self.text = ""
+
+        def handle_data(self, data):
+            if self.in_code:
+                self.text += data
+
+        def handle_endtag(self, tag):
+            if tag == "code" and self.in_code:
+                self.examples.append(self.text)
+                self.in_code = False
+            if tag == self.context:
+                self.context = None
+
+    guide = GuideExamples()
+    guide.feed(client.get("/").get_data(as_text=True))
+    assert len(guide.examples) == 9
+    assert "C500LC" in guide.examples
+    assert "C500CADLCL40A" in guide.examples
+    for source in guide.examples:
+        response = client.post("/api/calculate", json={
+            "source": source,
+            "participants": [{"code": c, "split": c in "BL"} for c in "BLC"],
+            "base": "CAD", "initial_currency": "CAD", "fx": "USD=1.25CAD",
+        })
+        assert response.status_code == 200, (source, response.json)
+        assert response.json["audit"]["status"] == "SETTLEMENT_READY"
+    audit = response.json["audit"]  # The complete, dated notes example.
+    assert [tx["date"] for tx in audit["transactions"]] == ["0808", "0808", "0809"]
+    assert audit["settlements"] == [{"from": "L", "to": "C", "amount": "150"}]
 
 
 def test_demo_golden_end_to_end(client, payload):
@@ -96,6 +144,82 @@ def test_iceland_web_matches_saved_reference(client):
     assert len(audit["transactions"]) == 76
     for field in ["paid", "share", "net", "settlements", "total_expense"]:
         assert audit[field] == expected[field]
+
+
+def test_real_request_with_multi_person_suffix(client):
+    source = "lunch: B200CAD\ndinner: L300CADA\ncoffee: C500LC"
+    response = client.post("/api/calculate", json={
+        "source": source,
+        "participants": [{"code": c, "name": "", "split": c in "BL"} for c in "BLC"],
+        "base": "CAD", "fx": "", "fx_date": "", "initial_currency": "",
+    })
+    assert response.status_code == 200
+    audit = response.json["audit"]
+    assert audit["source_text"] == source
+    assert audit["transactions"][2]["allocation"] == {
+        "type": "equal_split", "participants": ["L", "C"], "weights": ["1", "1"],
+    }
+    assert audit["transactions"][2]["shares"] == {"L": "250", "C": "250"}
+    assert audit["paid"] == {"B": "200", "L": "300", "C": "500"}
+    assert audit["share"] == {"B": "200", "L": "450", "C": "350"}
+    assert audit["net"] == {"B": "0", "L": "-150", "C": "150"}
+    assert audit["settlements"] == [{"from": "L", "to": "C", "amount": "150"}]
+
+
+@pytest.mark.parametrize("suffix", ["LC", "LBC", "LBCD"])
+@pytest.mark.parametrize("format", ["C120CAD{suffix}", "C120{suffix} CAD"])
+def test_web_two_three_and_four_person_groups(client, suffix, format):
+    response = client.post("/api/calculate", json={
+        "source": format.format(suffix=suffix),
+        "participants": [{"code": c, "split": c in "LB"} for c in "LBCD"],
+        "base": "CAD",
+    })
+    assert response.status_code == 200
+    audit = response.json["audit"]
+    assert audit["transactions"][0]["shares"] == {c: str(120 // len(suffix)) for c in suffix}
+    assert sum(Decimal(value) for value in audit["net"].values()) == 0
+
+
+@pytest.mark.parametrize("suffix", ["LL", "LCL", "AL", "LA", "LZ"])
+def test_web_invalid_groups_return_line_number_and_no_settlement(client, suffix):
+    response = client.post("/api/calculate", json={
+        "source": f"Lunch: B10CAD\nCoffee: C100CAD{suffix}",
+        "participants": [{"code": c, "split": c in "LB"} for c in "LBC"],
+        "base": "CAD",
+    })
+    assert response.status_code == 422
+    assert response.json["line"] == 2
+    assert response.json["settlements"] == []
+    assert "audit" not in response.json
+
+
+def test_web_ambiguous_three_letter_group_is_not_treated_as_an_fx_lookup(client):
+    response = client.post("/api/calculate", json={
+        "source": "B10CAD\nC120LBC",
+        "participants": [{"code": c, "split": c in "LB"} for c in "LBC"],
+        "base": "CAD",
+    })
+    assert response.status_code == 422
+    assert "ambiguous" in response.json["error"]
+    assert response.json["settlements"] == []
+
+
+def test_online_fx_with_group_suffix_preserves_currency_context(app):
+    calls = []
+    def fetch(currency, base, requested):
+        calls.append((currency, base, requested))
+        return {"currency": currency, "base_currency": base, "rate": "1.25", "source": "test"}
+    app.config["RATE_LOADER"] = fetch
+    response = app.test_client().post("/api/calculate", json={
+        "source": "C80LCUSD C40LC",
+        "participants": [{"code": c, "split": c in "LB"} for c in "LBC"],
+        "base": "CAD", "fx_date": "2026-08-16",
+    })
+    assert response.status_code == 200
+    audit = response.json["audit"]
+    assert calls == [("USD", "CAD", date(2026, 8, 16))]
+    assert [tx["currency_source"] for tx in audit["transactions"]] == ["explicit", "inherited"]
+    assert [tx["shares"] for tx in audit["transactions"]] == [{"L": "50.00", "C": "50.00"}, {"L": "25.00", "C": "25.00"}]
 
 
 @pytest.mark.parametrize("source,initial,expected", [

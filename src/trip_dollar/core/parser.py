@@ -8,6 +8,20 @@ from typing import Any
 from .models import Allocation, LedgerConfig
 
 
+def allocation_suffixes(text: str, start: int, codes: set[str]) -> list[tuple[int, str]]:
+    """Consider every suffix boundary; the last letter may start the next payer."""
+    if text[start:start + 1] == "A":
+        return [(start + 1, "A")]
+    endings = []
+    seen = set()
+    end = start
+    while end < len(text) and text[end] in codes and text[end] not in seen:
+        seen.add(text[end])
+        end += 1
+        endings.append((end, text[start:end]))
+    return endings
+
+
 def split_compact(text: str, config: LedgerConfig, *, discover_currencies: bool = False) -> list[tuple[int, int, ParsedFields]]:
     """Find a unique complete interpretation. Never discard unrecognized text.
 
@@ -32,9 +46,7 @@ def split_compact(text: str, config: LedgerConfig, *, discover_currencies: bool 
         if not match:
             continue
         end = match.end()
-        allocations = [(end, None)]
-        if end < len(text) and text[end] in codes | {"A"}:
-            allocations.append((end + 1, text[end]))
+        allocations = [(end, None), *allocation_suffixes(text, end, codes)]
         found = []
         for allocation_end, token in allocations:
             endings = [(allocation_end, None, token)]
@@ -51,8 +63,9 @@ def split_compact(text: str, config: LedgerConfig, *, discover_currencies: bool 
                 if text[currency_start:currency_start + len(currency)].upper() == currency:
                     currency_end = currency_start + len(currency)
                     endings.append((currency_end, currency, token))
-                    if token is None and currency_end < len(text) and text[currency_end] in codes | {"A"}:
-                        endings.append((currency_end + 1, currency, text[currency_end]))
+                    if token is None:
+                        endings.extend((suffix_end, currency, suffix)
+                                       for suffix_end, suffix in allocation_suffixes(text, currency_end, codes))
             for record_end, currency, allocation_token in endings:
                 for tail in paths.get(record_end, []):
                     fields = ParsedFields(text[start], Decimal(match.group()), allocation_token, currency)
@@ -68,7 +81,7 @@ def split_compact(text: str, config: LedgerConfig, *, discover_currencies: bool 
         paths[start] = found
     matches = paths.get(0, [])
     if len(matches) > 1:
-        raise ValueError("ambiguous compact records; use explicit per-transaction fields to disambiguate")
+        raise ValueError("ambiguous compact records; put an explicit currency after the allocation group or use explicit per-transaction fields")
     if not matches or not matches[0]:
         raise ValueError("unrecognized or incomplete compact record stream")
     return list(matches[0])
@@ -216,10 +229,12 @@ def resolve_allocation(token: str | None, config: LedgerConfig) -> Allocation | 
     if token == "A":
         ids = tuple(p.id for p in config.participants if p.active)
         return Allocation("all_equal", ids, tuple(Decimal(1) for _ in ids))
-    participant = next((p for p in config.participants if p.code == token), None)
-    if participant is None:
+    by_code = {p.code: p.id for p in config.participants}
+    if len(set(token)) != len(token) or any(code not in by_code for code in token):
         return None
-    return Allocation("single", (participant.id,), (Decimal(1),))
+    ids = tuple(by_code[code] for code in token)
+    return Allocation("single" if len(ids) == 1 else "equal_split", ids,
+                      tuple(Decimal(1) for _ in ids))
 
 
 def allocation_from_override(raw: dict[str, Any], config: LedgerConfig) -> Allocation | None:

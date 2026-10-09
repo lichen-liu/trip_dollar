@@ -453,23 +453,76 @@ textarea#source:focus {
 .syntax-examples {
   padding-top: 18px;
 }
-.syntax-examples p {
-  display: flex;
-  gap: 18px;
+.syntax-section + .syntax-section {
+  border-top: 1px solid var(--line-soft);
+  margin-top: 20px;
+  padding-top: 20px;
+}
+.syntax-section h3 {
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+.syntax-example {
+  display: grid;
+  grid-template-columns: minmax(100px, 0.85fr) minmax(0, 1.5fr);
+  align-items: start;
+  gap: 14px;
   margin-bottom: 13px;
   font-size: 11px;
 }
 .syntax-examples code {
-  min-width: 100px;
-  white-space: nowrap;
   font: 10px/1.6 var(--mono);
   background: var(--paper);
   padding: 3px 5px;
+  overflow-wrap: anywhere;
 }
-.syntax-examples p.muted {
-  display: block;
-  margin-top: 18px;
+.syntax-note {
+  font-size: 11px;
+  line-height: 1.7;
+  margin-bottom: 13px;
+}
+.syntax-section > :last-child {
   margin-bottom: 0;
+}
+.syntax-parts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+}
+.syntax-parts > div {
+  background: var(--paper);
+  border-top: 2px solid var(--line);
+  padding: 8px;
+}
+.syntax-parts dt {
+  font-size: 9px;
+  color: var(--muted);
+}
+.syntax-parts dd {
+  font: 500 14px/1.6 var(--mono);
+  margin: 3px 0 0;
+}
+.syntax-block {
+  background: var(--paper);
+  border-left: 2px solid var(--ink);
+  padding: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 14px 0;
+}
+.syntax-block code {
+  padding: 0;
+}
+@media (max-width: 420px) {
+  .syntax-example {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+  }
+  .syntax-parts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 .people-labels,
 .person-row {

@@ -92,8 +92,8 @@
               />
             </div>
             <p class="section-description">
-              Paste them as they are. Dates, merchant names, and multiple
-              expenses per line all work.
+              Paste or upload your expense notes. Use one-letter participant
+              codes, with optional date headings and merchant names.
             </p>
             <label class="sr-only" for="source">Raw expense notes</label>
             <textarea
@@ -107,30 +107,112 @@
               <span id="file-status">Nothing to upload? Just paste above.</span
               ><span id="line-count">0 lines</span>
             </div>
-            <details class="syntax-help">
+            <details class="syntax-help" id="format-guide">
               <summary>
-                A quick guide to the shorthand <span aria-hidden="true">+</span>
+                Expense format guide <span aria-hidden="true">+</span>
               </summary>
               <div class="syntax-examples">
-                <p>
-                  <code>L100CADA</code
-                  ><span>L paid 100 CAD. Everyone shares it.</span>
-                </p>
-                <p>
-                  <code>B12</code
-                  ><span
-                    >B paid 12. Use the default split and previous
-                    currency.</span
-                  >
-                </p>
-                <p>
-                  <code>L1000M</code
-                  ><span>L paid 1,000. M bears the whole cost.</span>
-                </p>
-                <p class="muted">
-                  A means everyone. Currency carries forward in the order you
-                  wrote the records, never by date.
-                </p>
+                <section class="syntax-section" aria-labelledby="guide-record">
+                  <h3 id="guide-record">Read one expense</h3>
+                  <p class="syntax-note">
+                    <code>C500CADLC</code> means C paid 500 CAD, shared equally
+                    by L and C. Who paid and who shares are separate choices.
+                  </p>
+                  <dl class="syntax-parts">
+                    <div><dt>Paid by</dt><dd>C</dd></div>
+                    <div><dt>Amount</dt><dd>500</dd></div>
+                    <div><dt>Currency</dt><dd>CAD</dd></div>
+                    <div><dt>Shared by</dt><dd>LC</dd></div>
+                  </dl>
+                  <p class="syntax-note muted">
+                    Add every participant under “Who’s coming?” first. Codes
+                    are single letters, not names or numbers, and are
+                    case-sensitive: C and c are different people. Use a decimal
+                    point for amounts, such as <code>12.50</code>; no thousands
+                    separators or currency symbols.
+                  </p>
+                </section>
+                <section class="syntax-section" aria-labelledby="guide-split">
+                  <h3 id="guide-split">Choose who shares it</h3>
+                  <div class="syntax-example">
+                    <code>B12</code><span>B paid 12. The people ticked for
+                    “Default split” share it equally—not necessarily B.</span>
+                  </div>
+                  <div class="syntax-example">
+                    <code>L100CADA</code><span>L paid 100 CAD. A means everyone
+                    on the participant list shares equally.</span>
+                  </div>
+                  <div class="syntax-example">
+                    <code>C500L</code><span>C paid 500. L bears the whole cost.</span>
+                  </div>
+                  <div class="syntax-example">
+                    <code>C500LC</code><span>C paid 500. L and C share 250 each.</span>
+                  </div>
+                  <p class="syntax-note muted">
+                    List each person once. <code>LL</code> is not a weighted
+                    split, and <code>AL</code> is invalid: use A alone for
+                    everyone. Unlabelled examples above inherit the currency.
+                  </p>
+                </section>
+                <section class="syntax-section" aria-labelledby="guide-currency">
+                  <h3 id="guide-currency">Label currency changes</h3>
+                  <div class="syntax-example">
+                    <code>B20CAD L30A</code><span>Both expenses are in CAD.
+                    The second inherits the first record’s currency.</span>
+                  </div>
+                  <div class="syntax-example">
+                    <code>B20CAD L30USDA C10LC</code><span>The first expense is
+                    CAD; the next two are USD.</span>
+                  </div>
+                  <div class="syntax-example">
+                    <code>C500LC CAD</code><span>Currency can come before or
+                    after the allocation: this is the same as C500CADLC.</span>
+                  </div>
+                  <p class="syntax-note muted">
+                    Your first expense needs a currency label unless you set
+                    “Starting currency.” “Settle in” only chooses the output
+                    currency; it does not label your input. Amounts, merchants
+                    and dates never determine currency.
+                  </p>
+                  <p class="syntax-note muted">
+                    If a group of letters looks like a currency, write
+                    <code>C500LBC CAD</code> to make the split clear. Ambiguous
+                    input stops the calculation; we don’t guess.
+                  </p>
+                </section>
+                <section class="syntax-section" aria-labelledby="guide-lines">
+                  <h3 id="guide-lines">One line or several</h3>
+                  <div class="syntax-example">
+                    <code>C500CADLCL40A</code><span>Two adjacent expenses:
+                    C paid 500 for L/C; L paid 40 for everyone. Spaces work too.</span>
+                  </div>
+                  <p class="syntax-note muted">
+                    Start a line with <code>Coffee:</code> to attach a merchant
+                    or description to every expense on that line.
+                  </p>
+                  <pre class="syntax-block"><code>2026.Aug.Trip
+
+0808
+Lunch: B200CAD
+Coffee: C500LC
+
+0809
+Dinner: L300CADA</code></pre>
+                  <p class="syntax-note muted">
+                    Dates use MMDD on their own line: <code>0808</code> is
+                    August 8. Following expenses keep that date until the next
+                    heading. Raw headings like <code>08/08</code> or
+                    <code>2026-08-08</code> aren’t supported. Dates are optional;
+                    expenses before the first heading have no date.
+                  </p>
+                  <p class="syntax-note muted">
+                    For online FX, the title supplies the year and the latest
+                    MMDD heading supplies the trip’s last date. Without those,
+                    or for a trip crossing New Year, set “Rate date” explicitly.
+                    Currency always follows the order you wrote the records,
+                    never calendar order.
+                  </p>
+                </section>
               </div>
             </details>
           </section>
@@ -153,8 +235,9 @@
               + Add a person
             </button>
             <p class="field-hint">
-              Tick who shares records with no allocation suffix. Codes are
-              single letters and case-sensitive; A is reserved for everyone.
+              Tick who shares an expense with no allocation suffix, such as
+              B12. Codes are single letters and case-sensitive; A is reserved
+              for everyone.
             </p>
             <div class="field currency-field">
               <label for="base">Settle in</label
@@ -177,8 +260,10 @@
               </summary>
               <div class="rate-fields">
                 <p class="field-hint">
-                  Missing rates are looked up using the trip’s last date. The
-                  result shows exactly which rates were used.
+                  Supply your own rates, or leave them blank for online lookup
+                  using the trip’s last date. Each currency in your notes needs
+                  a rate to the settlement currency. The audit shows the rates
+                  and dates actually used.
                 </p>
                 <div class="field">
                   <label for="fx"
@@ -191,7 +276,9 @@
                   ></textarea>
                   <p class="field-hint">
                     1 unit on the left equals the amount on the right. Either
-                    direction works.
+                    direction works; one side must be your settlement currency.
+                    Separate multiple rates with spaces or new lines. These
+                    placeholders are examples, not current rates.
                   </p>
                 </div>
                 <div class="field">
@@ -199,7 +286,10 @@
                     >Rate date <span class="optional">optional</span></label
                   ><input id="fx-date" type="date" />
                   <p class="field-hint">
-                    Leave blank to use the trip’s last date.
+                    Leave blank to infer from the year title and MMDD headings.
+                    On weekends or holidays, lookup uses the latest published
+                    rate within the preceding seven days. Future dates need
+                    manual rates.
                   </p>
                 </div>
                 <div class="field">
@@ -213,6 +303,11 @@
                     placeholder="Only if your first record has no currency"
                     autocomplete="off"
                   />
+                  <p class="field-hint">
+                    Required only when the first expense has no currency label.
+                    A later explicit label changes the currency for following
+                    expenses.
+                  </p>
                 </div>
               </div>
             </details>

@@ -84,6 +84,15 @@ Tickets switches to ISK: D pays 4,000 for everyone; L pays 1,000 for M.
 Multiple records work with spaces or directly adjacent. Input order controls
 currency inheritance; date headings do not change currency.
 
+To split an expense among specific people, list their letters together:
+`C500LC` means C paid 500, shared equally by L and C. `C500CADLC` and
+`C500LC CAD` also specify CAD. Each letter must be registered and appear only
+once; `A` means everyone and cannot be combined with other letters.
+
+The parser rejects ambiguous records rather than guessing. A three-letter group
+can look like a currency during online rate discovery. In that case, put the
+currency after the group, for example `C500LBC CAD`.
+
 ## Only when needed
 
 | Option | Use |
