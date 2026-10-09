@@ -1,0 +1,10 @@
+{
+  "source": "2026.Aug.A weekend away\n\n0815\nBreakfast: L60CAD\nMuseum: C90A\nTaxi: B24CUSD\n\n0814\nDinner: L48A\nSouvenir: C20BCAD\nSnacks: B30A",
+  "participants": [
+    { "code": "L", "name": "Lee", "split": true },
+    { "code": "B", "name": "Blair", "split": true },
+    { "code": "C", "name": "Casey", "split": false }
+  ],
+  "base": "CAD",
+  "fx": "USD=1.25CAD"
+}

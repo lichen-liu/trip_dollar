@@ -4,14 +4,14 @@ from pathlib import Path
 import pytest
 
 from trip_dollar.cli import main
-from trip_dollar.fx import FXError
+from trip_dollar.core.fx import FXError
 
 
 @pytest.fixture(autouse=True)
 def no_network(monkeypatch):
     def fail(*args, **kwargs):
         raise AssertionError("Tests must not access live FX services")
-    monkeypatch.setattr("trip_dollar.fx.urlopen", fail)
+    monkeypatch.setattr("trip_dollar.core.fx.urlopen", fail)
 
 
 def arguments(tmp_path, text):
