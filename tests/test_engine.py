@@ -2,9 +2,9 @@ from decimal import Decimal
 
 import pytest
 
-from trip_dollar.config import ConfigurationError, load_config
-from trip_dollar.engine import LedgerEngine
-from trip_dollar.models import CurrencySource, LedgerStatus
+from trip_dollar.core.config import ConfigurationError, load_config
+from trip_dollar.core.engine import LedgerEngine
+from trip_dollar.core.models import CurrencySource, LedgerStatus
 
 
 def config(participants=None, initial_currency=None):

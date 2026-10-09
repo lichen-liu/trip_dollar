@@ -13,13 +13,18 @@ authors = [{name = "Trip Dollar contributors"}]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8"]
+dev = ["pytest>=8", "Flask>=3.1,<4", "waitress>=3,<4"]
+web = ["Flask>=3.1,<4", "waitress>=3,<4"]
 
 [project.scripts]
 trip-dollar = "trip_dollar.cli:main"
+trip-dollar-web = "trip_dollar.server.app:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"trip_dollar.frontend" = ["templates/*.html", "static/*.css", "static/*.js", "static/*.json", "static/*.svg", "static/fonts/*.woff2", "static/fonts/*.txt"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

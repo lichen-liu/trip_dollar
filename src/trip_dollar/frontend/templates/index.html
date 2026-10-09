@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#151816" />
+    <meta name="application-name" content="Trip Split · boboji.fyi" />
+    <meta
+      name="description"
+      content="Track shared expenses. See who owes whom. A tool from boboji.fyi."
+    />
+    <title>Trip Split — boboji.fyi</title>
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='favicon.svg') }}"
+      type="image/svg+xml"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#ledger-form">Skip to expense inputs</a>
+    <aside class="status-banner" aria-label="boboji.fyi tools">
+      <span class="status-live"
+        ><i aria-hidden="true"></i> Shared travel tools</span
+      >
+      <span class="status-context">Notes → ledger → settlement</span>
+      <a
+        class="boboji-lockup"
+        href="https://boboji.fyi/"
+        aria-label="boboji.fyi home"
+        ><b aria-hidden="true">b/</b><span>boboji.fyi</span></a
+      >
+    </aside>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Trip Split, back to top"
+        ><span class="brand-mark" aria-hidden="true">b/</span
+        ><span>TRIP SPLIT</span></a
+      >
+      <nav aria-label="Sections">
+        <a href="#ledger-form">Expenses</a>
+        <a href="#participants">People</a>
+        <a id="results-link" href="#results" hidden>Results</a>
+      </nav>
+      <button type="button" id="example-button" class="button subtle">
+        Try an example <span aria-hidden="true">↗</span>
+      </button>
+    </header>
+    <main id="top">
+      <noscript
+        ><p class="error-box">
+          Enable JavaScript to use the expense form. The command-line tool also
+          works without a browser.
+        </p></noscript
+      >
+      <section class="intro">
+        <div>
+          <p class="eyebrow">
+            <span aria-hidden="true"></span>TRAVEL / SHARED EXPENSES
+          </p>
+          <h1>THE TRIP.<br /><em>THE SPLIT.</em></h1>
+        </div>
+        <div class="intro-copy">
+          <p>Track shared expenses.<br />See who owes whom.</p>
+          <p class="muted">
+            Start with your original notes. Get a payment plan you can check,
+            down to each record, currency and share.
+          </p>
+        </div>
+      </section>
+      <div class="workflow" aria-label="How it works">
+        <span><b>01</b> Add your notes</span
+        ><span><b>02</b> Choose your people</span
+        ><span><b>03</b> Settle up</span>
+      </div>
+
+      <form id="ledger-form">
+        <div class="input-grid">
+          <section class="card notes-card">
+            <div class="card-heading">
+              <div>
+                <p class="eyebrow">01 / YOUR EXPENSES</p>
+                <h2>Start with your notes</h2>
+              </div>
+              <label for="file-input" class="button subtle upload-label"
+                >↑ Upload .txt</label
+              ><input
+                type="file"
+                id="file-input"
+                accept=".txt,text/plain"
+                class="file-input"
+              />
+            </div>
+            <p class="section-description">
+              Paste them as they are. Dates, merchant names, and multiple
+              expenses per line all work.
+            </p>
+            <label class="sr-only" for="source">Raw expense notes</label>
+            <textarea
+              id="source"
+              name="source"
+              required
+              spellcheck="false"
+              placeholder="2026.Aug.Trip&#10;&#10;0808&#10;Lunch: L100CADA&#10;Coffee: B12&#10;Tickets: D4000ISKA L1000M"
+            ></textarea>
+            <div class="editor-footer">
+              <span id="file-status">Nothing to upload? Just paste above.</span
+              ><span id="line-count">0 lines</span>
+            </div>
+            <details class="syntax-help">
+              <summary>
+                A quick guide to the shorthand <span aria-hidden="true">+</span>
+              </summary>
+              <div class="syntax-examples">
+                <p>
+                  <code>L100CADA</code
+                  ><span>L paid 100 CAD. Everyone shares it.</span>
+                </p>
+                <p>
+                  <code>B12</code
+                  ><span
+                    >B paid 12. Use the default split and previous
+                    currency.</span
+                  >
+                </p>
+                <p>
+                  <code>L1000M</code
+                  ><span>L paid 1,000. M bears the whole cost.</span>
+                </p>
+                <p class="muted">
+                  A means everyone. Currency carries forward in the order you
+                  wrote the records, never by date.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="card settings-card">
+            <div class="card-heading">
+              <div>
+                <p class="eyebrow">02 / THE TRIP</p>
+                <h2>Who’s coming?</h2>
+              </div>
+            </div>
+            <p class="section-description">
+              Include everyone, even if they haven’t paid for anything.
+            </p>
+            <div class="people-labels" aria-hidden="true">
+              <span>Code</span><span>Name (optional)</span
+              ><span>Default split</span><span></span>
+            </div>
+            <div id="participants"></div>
+            <button type="button" id="add-person" class="add-person">
+              + Add a person
+            </button>
+            <p class="field-hint">
+              Tick who shares records with no allocation suffix. Codes are
+              single letters and case-sensitive; A is reserved for everyone.
+            </p>
+            <div class="field currency-field">
+              <label for="base">Settle in</label
+              ><input
+                id="base"
+                name="base"
+                placeholder="e.g. CAD"
+                maxlength="3"
+                pattern="[A-Za-z]{3}"
+                required
+                autocomplete="off"
+              />
+              <p class="field-hint">
+                The currency for all balances and payments.
+              </p>
+            </div>
+            <details id="rate-settings" class="rate-settings">
+              <summary>
+                Currency &amp; exchange rates <span aria-hidden="true">+</span>
+              </summary>
+              <div class="rate-fields">
+                <p class="field-hint">
+                  Missing rates are looked up using the trip’s last date. The
+                  result shows exactly which rates were used.
+                </p>
+                <div class="field">
+                  <label for="fx"
+                    >Your rates <span class="optional">optional</span></label
+                  ><textarea
+                    id="fx"
+                    rows="2"
+                    placeholder="CAD=88.6ISK&#10;USD=1.37CAD"
+                    spellcheck="false"
+                  ></textarea>
+                  <p class="field-hint">
+                    1 unit on the left equals the amount on the right. Either
+                    direction works.
+                  </p>
+                </div>
+                <div class="field">
+                  <label for="fx-date"
+                    >Rate date <span class="optional">optional</span></label
+                  ><input id="fx-date" type="date" />
+                  <p class="field-hint">
+                    Leave blank to use the trip’s last date.
+                  </p>
+                </div>
+                <div class="field">
+                  <label for="initial-currency"
+                    >Starting currency
+                    <span class="optional">optional</span></label
+                  ><input
+                    id="initial-currency"
+                    maxlength="3"
+                    pattern="[A-Za-z]{3}"
+                    placeholder="Only if your first record has no currency"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+            </details>
+          </section>
+        </div>
+        <div id="error-box" class="error-box" role="alert" hidden>
+          <div>
+            <strong>Let’s fix this first</strong>
+            <p id="error-message"></p>
+          </div>
+          <button id="error-jump" type="button" class="button subtle" hidden>
+            Go to line
+          </button>
+        </div>
+        <div class="calculate-bar">
+          <p>
+            <span class="privacy-dot" aria-hidden="true"></span>Notes stay in
+            this session. Only currencies and dates are sent for rate lookup.
+          </p>
+          <button id="calculate-button" type="submit" class="button primary">
+            Calculate the split <span aria-hidden="true">→</span>
+          </button>
+        </div>
+        <p id="loading-status" class="loading-status" role="status" hidden>
+          Reading your notes and checking exchange rates…
+        </p>
+      </form>
+
+      <section
+        id="results"
+        class="results"
+        hidden
+        aria-label="Calculation results"
+      >
+        <div class="results-heading">
+          <div>
+            <p class="eyebrow">03 / SETTLE UP</p>
+            <h2>THE SETTLEMENT.</h2>
+            <p id="result-subtitle" class="muted"></p>
+          </div>
+          <div class="result-actions">
+            <button id="edit-button" class="button subtle" type="button">
+              ↑ Edit inputs</button
+            ><button id="download-button" class="button outline" type="button">
+              ↓ Download audit
+            </button>
+          </div>
+        </div>
+        <div id="stale-note" class="stale-note" role="status" hidden>
+          Your inputs have changed. Calculate again to update these results.
+        </div>
+        <div class="results-grid">
+          <div class="total-card">
+            <p>Total trip expense</p>
+            <div>
+              <span id="result-total"></span> <span id="result-currency"></span>
+            </div>
+            <span class="verified"
+              ><span aria-hidden="true">✓</span> Paid and shares balance</span
+            >
+            <p class="total-note">
+              Every record accounted for.<br />Exact figures in your audit.
+            </p>
+          </div>
+          <div class="card payments-card">
+            <p class="eyebrow">THE PAYMENT PLAN</p>
+            <h3>Here’s who pays whom</h3>
+            <div id="payments"></div>
+            <button id="copy-button" type="button" class="copy-button">
+              Copy payment plan
+            </button>
+            <p id="copy-status" class="field-hint" role="status"></p>
+          </div>
+        </div>
+        <div class="review-heading">
+          <h3>Check the details</h3>
+          <span class="muted">Amounts rounded to 2 decimal places.</span>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Review results">
+          <button
+            class="tab active"
+            id="tab-balances"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-balances"
+            type="button"
+          >
+            Balances</button
+          ><button
+            class="tab"
+            id="tab-ledger"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-ledger"
+            type="button"
+            tabindex="-1"
+          >
+            Expense ledger <span id="record-badge"></span></button
+          ><button
+            class="tab"
+            id="tab-rates"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-rates"
+            type="button"
+            tabindex="-1"
+          >
+            Currencies &amp; rates
+          </button>
+        </div>
+        <div
+          id="panel-balances"
+          class="card tab-panel"
+          role="tabpanel"
+          aria-labelledby="tab-balances"
+        >
+          <div class="table-scroll">
+            <table>
+              <caption class="sr-only">
+                Participant balances
+              </caption>
+              <thead>
+                <tr>
+                  <th>Person</th>
+                  <th class="number">Paid</th>
+                  <th class="number">Their share</th>
+                  <th class="number">To settle</th>
+                </tr>
+              </thead>
+              <tbody id="balances"></tbody>
+            </table>
+          </div>
+          <p class="table-footnote">
+            Paid is what someone fronted. Their share is what they owe for the
+            trip. The difference is what they pay or receive.
+          </p>
+        </div>
+        <div
+          id="panel-ledger"
+          class="card tab-panel"
+          role="tabpanel"
+          aria-labelledby="tab-ledger"
+          hidden
+        >
+          <div class="ledger-toolbar">
+            <label for="ledger-search" class="sr-only">Find an expense</label
+            ><input
+              id="ledger-search"
+              type="search"
+              placeholder="Find a merchant, payer or raw record"
+            /><span id="ledger-count" class="muted"></span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <caption class="sr-only">
+                Parsed expenses in original order
+              </caption>
+              <thead>
+                <tr>
+                  <th># / Date</th>
+                  <th>Expense &amp; original record</th>
+                  <th>Paid by</th>
+                  <th>Shared by</th>
+                  <th class="number">Original</th>
+                  <th class="number">Base amount</th>
+                </tr>
+              </thead>
+              <tbody id="ledger"></tbody>
+            </table>
+          </div>
+          <p class="table-footnote">
+            Records are shown in original input order. Open an expense to see
+            its source line, currency context and individual shares.
+          </p>
+        </div>
+        <div
+          id="panel-rates"
+          class="card tab-panel rates-panel"
+          role="tabpanel"
+          aria-labelledby="tab-rates"
+          hidden
+        >
+          <div>
+            <h3>Exchange rates used</h3>
+            <div id="rate-list"></div>
+          </div>
+          <div>
+            <h3>Currency through your notes</h3>
+            <p class="field-hint">
+              Each label carries forward until another currency is stated.
+            </p>
+            <div id="segments"></div>
+          </div>
+        </div>
+        <p class="rounding-note">
+          Rounding happens only for display. Adding displayed amounts can differ
+          by a cent; your downloaded audit preserves the exact balances and
+          transfers.
+        </p>
+      </section>
+      <footer>
+        <a
+          class="boboji-lockup"
+          href="https://boboji.fyi/"
+          aria-label="boboji.fyi home"
+          ><b aria-hidden="true">b/</b><span>boboji.fyi</span></a
+        >
+        <p>Trip Split / Shared expense ledger</p>
+        <span>Original notes. Checkable results.</span>
+      </footer>
+    </main>
+    <template id="person-template">
+      <div class="person-row">
+        <input
+          class="person-code"
+          aria-label="Participant letter code"
+          maxlength="1"
+          pattern="[B-Za-z]"
+          placeholder="L"
+          required
+          autocomplete="off"
+        />
+        <input
+          class="person-name"
+          aria-label="Participant name (optional)"
+          placeholder="Name"
+          maxlength="100"
+          autocomplete="off"
+        />
+        <label class="split-check"
+          ><input type="checkbox" class="person-split" /><span class="sr-only"
+            >Include in default split</span
+          ></label
+        >
+        <button
+          class="remove-person"
+          type="button"
+          aria-label="Remove participant"
+        >
+          ×
+        </button>
+      </div>
+    </template>
+  </body>
+</html>
