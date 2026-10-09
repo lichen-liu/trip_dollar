@@ -9,11 +9,10 @@ from datetime import date
 from decimal import DecimalException
 from pathlib import Path
 
-from .config import load_config
-from .engine import LedgerEngine
-from .fx import currency_code, fetch_rate, infer_date, parse_equations
-from .parser import expand_records, import_document, parse_fields
+from .core.engine import LedgerEngine
+from .core.fx import currency_code, fetch_rate
 from .report import text_report
+from .core.service import LedgerOptions, prepare_config
 
 
 def argument_parser() -> argparse.ArgumentParser:
@@ -33,49 +32,11 @@ def argument_parser() -> argparse.ArgumentParser:
 
 
 def build_config(args, source: str) -> tuple[dict, list[dict], list[dict]]:
-    people = []
-    for value in args.participants:
-        code, separator, name = value.partition("=")
-        if separator and not name.strip():
-            raise ValueError(f"Missing name after {code}=.")
-        people.append({"id": code, "code": code, "name": name.strip() if separator else code})
-    if len(set(args.split)) != len(args.split):
-        raise ValueError("--split cannot contain the same participant twice.")
-    rates, provenance = parse_equations(args.fx, args.base)
-    config = {"base_currency": args.base, "participants": people,
-              "fx_rates": {code: str(rate) for code, rate in rates.items()},
-              "default_allocation": {"type": "equal_split", "participants": args.split}}
-    # Discover explicit labels before lookup; never invent a transaction currency.
-    registry = load_config(config)
-    records = list(expand_records(import_document(source), registry, discover_currencies=True))
-    if not records:
-        raise ValueError("The input file contains no expenses.")
-    current = args.initial_currency
-    required = set()
-    for index, record in enumerate(records, 1):
-        fields = parse_fields(record, registry)
-        line = record.get("source_sequence", index)
-        if fields.error:
-            raise ValueError(f"Line {line}, {record['raw_text'].strip()!r}: {fields.error}.")
-        if fields.explicit_currency:
-            resolved = current = currency_code(fields.explicit_currency)
-        else:
-            resolved = current
-        if resolved is None:
-            raise ValueError(f"Line {line}, {record['raw_text'].strip()!r}: currency is missing. Add a currency label or supply --initial-currency. No settlement was calculated.")
-        required.add(resolved)
-    missing = required - rates.keys()
-    if args.initial_currency:
-        missing |= {args.initial_currency} - rates.keys()
-    if missing:
-        requested = args.fx_date or infer_date(source)
-        for currency in sorted(missing):
-            reference = fetch_rate(currency, args.base, requested, Path(".trip-dollar/fx-cache.json"))
-            config["fx_rates"][currency] = reference["rate"]
-            provenance.append(reference)
-    if args.initial_currency:
-        config["initial_currency"] = args.initial_currency
-    return config, provenance, records
+    return prepare_config(
+        LedgerOptions(args.participants, args.base, args.split, args.fx,
+                      args.initial_currency, args.fx_date),
+        source, rate_loader=fetch_rate,
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
