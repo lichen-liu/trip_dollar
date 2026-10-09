@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from .models import LedgerResult
+from .core.models import LedgerResult
+
+
+def display_amount(value: str) -> str:
+    """Presentation only; exact values stay in the audit payload."""
+    return f"{Decimal(value):,.2f}"
 
 
 def _money(value: Decimal | None, precision: int) -> str:

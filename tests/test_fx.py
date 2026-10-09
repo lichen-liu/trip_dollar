@@ -3,7 +3,7 @@ from decimal import Decimal
 
 import pytest
 
-from trip_dollar import fx
+from trip_dollar.core import fx
 
 
 def test_equations_both_directions_and_multiple_pairs():

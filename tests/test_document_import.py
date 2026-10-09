@@ -5,8 +5,8 @@ from collections import defaultdict
 from decimal import Decimal
 
 from trip_dollar import LedgerEngine
-from trip_dollar.config import load_config
-from trip_dollar.parser import expand_records
+from trip_dollar.core.config import load_config
+from trip_dollar.core.parser import expand_records
 
 
 def syntax_config():
