@@ -79,6 +79,71 @@ def test_stopping_already_stopped_jobs_is_harmless(scripts, monkeypatch, capsys)
     assert "will not restart" in capsys.readouterr().out
 
 
+def test_status_reports_pids_and_executable_names_without_arguments(scripts, runtime, monkeypatch, capsys):
+    manage, _, _ = scripts
+    calls = []
+    def inspect_job(*args):
+        calls.append(args)
+        pid = 12345 if args[-1] == manage.target("server") else 12346
+        return subprocess.CompletedProcess(args, 0, stdout=f"job = {{\n\tstate = running\n\tpid = {pid}\n\t\tstate = active\n}}\n")
+    def inspect_process(args, **kwargs):
+        assert args[:2] == ["/bin/ps", "-p"]
+        assert args[3:] == ["-o", "comm="]
+        assert kwargs == {"capture_output": True, "text": True, "timeout": 5}
+        name = "/Applications/Python Framework/Python" if args[2] == "12345" else "/opt/homebrew/bin/cloudflared"
+        return subprocess.CompletedProcess(args, 0, stdout=f"{name}\n")
+    monkeypatch.setattr(manage, "launchctl", inspect_job)
+    monkeypatch.setattr(manage.subprocess, "run", inspect_process)
+    manage.status(runtime)
+    output = capsys.readouterr().out
+    assert "server: state = running; PID: 12345; process: Python; automatic restart enabled" in output
+    assert "tunnel: state = running; PID: 12346; process: cloudflared; automatic restart enabled" in output
+    assert str(runtime / "logs") in output
+    assert "not public tunnel connectivity" in output
+    assert calls == [("print", manage.target("server")), ("print", manage.target("tunnel"))]
+
+
+def test_status_stopped_jobs_have_no_pid_and_do_not_inspect_processes(scripts, runtime, monkeypatch, capsys):
+    manage, _, _ = scripts
+    monkeypatch.setattr(manage, "launchctl", lambda *args: subprocess.CompletedProcess(args, 1))
+    monkeypatch.setattr(manage.subprocess, "run", lambda *args, **kwargs: pytest.fail("No running process to inspect"))
+    manage.status(runtime)
+    output = capsys.readouterr().out
+    for job in ("server", "tunnel"):
+        assert f"{job}: stopped (not loaded); PID: none; process: none" in output
+    assert "automatic restart enabled" not in output
+
+
+@pytest.mark.parametrize("pid_line", ["", "\tpid = 0\n", "\tpid = -5\n", "\tpid = invalid\n", "\t\tpid = 999\n"])
+def test_status_loaded_job_without_valid_pid_remains_loaded(scripts, runtime, monkeypatch, capsys, pid_line):
+    manage, _, _ = scripts
+    monkeypatch.setattr(manage, "launchctl", lambda *args: subprocess.CompletedProcess(
+        args, 0, stdout=f"job = {{\n\tstate = waiting\n{pid_line}\t\tstate = active\n}}\n"))
+    monkeypatch.setattr(manage.subprocess, "run", lambda *args, **kwargs: pytest.fail("No valid process to inspect"))
+    manage.status(runtime)
+    output = capsys.readouterr().out
+    assert "state = waiting; PID: none; process: none; automatic restart enabled" in output
+    assert "stopped" not in output
+
+
+@pytest.mark.parametrize("failure", ["exited", "empty", "permission", "timeout"])
+def test_status_still_reports_job_if_process_name_is_unavailable(scripts, runtime, monkeypatch, capsys, failure):
+    manage, _, _ = scripts
+    monkeypatch.setattr(manage, "launchctl", lambda *args: subprocess.CompletedProcess(
+        args, 0, stdout="job = {\n\tstate = running\n\tpid = 12345\n}\n"))
+    def inspect_process(args, **kwargs):
+        if failure == "permission":
+            raise PermissionError("Cannot inspect")
+        if failure == "timeout":
+            raise subprocess.TimeoutExpired(args, 5)
+        return subprocess.CompletedProcess(args, 1 if failure == "exited" else 0, stdout="")
+    monkeypatch.setattr(manage.subprocess, "run", inspect_process)
+    manage.status(runtime)
+    output = capsys.readouterr().out
+    assert "PID: 12345; process: unavailable; automatic restart enabled" in output
+    assert "tunnel:" in output
+
+
 def test_stop_attempts_both_jobs_even_if_connector_fails(scripts, monkeypatch):
     manage, _, _ = scripts
     calls = []
