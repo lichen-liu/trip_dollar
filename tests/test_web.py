@@ -14,11 +14,11 @@ from trip_dollar.server.app import create_app, main
 
 
 @pytest.fixture
-def app(tmp_path, monkeypatch):
+def app(monkeypatch):
     def fail(*args, **kwargs):
         raise AssertionError("Tests must not access live FX services")
     monkeypatch.setattr("trip_dollar.core.fx.urlopen", fail)
-    return create_app({"TESTING": True, "FX_CACHE": tmp_path / "rates.json"})
+    return create_app({"TESTING": True})
 
 
 @pytest.fixture
@@ -113,7 +113,7 @@ def test_compact_and_initial_currency(client, payload, source, initial, expected
 
 def test_online_fx_uses_shared_loader(app, payload):
     calls = []
-    def fetch(currency, base, requested, cache):
+    def fetch(currency, base, requested):
         calls.append((currency, base, requested))
         return {"currency": currency, "base_currency": base, "rate": "1.25",
                 "source": "test", "requested_date": str(requested), "effective_date": "2026-08-14"}
@@ -123,6 +123,8 @@ def test_online_fx_uses_shared_loader(app, payload):
     assert response.status_code == 200
     assert calls == [("USD", "CAD", date(2026, 8, 15))]
     assert response.json["audit"]["fx_provenance"][0]["effective_date"] == "2026-08-14"
+    assert app.test_client().post("/api/calculate", json=payload).status_code == 200
+    assert calls == [("USD", "CAD", date(2026, 8, 15))] * 2
 
 
 def test_missing_currency_is_error_before_network(client, payload):

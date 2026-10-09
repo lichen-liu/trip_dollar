@@ -11,7 +11,6 @@ flowchart LR
     Service --> Engine["Ledger engine<br/>core/engine.py"]
     Engine --> Settlement["Settlement<br/>core/settlement.py"]
     Service --> FX["Exchange rates<br/>core/fx.py"]
-    FX <--> Cache["Local FX cache"]
     FX --> Provider["Online rate provider"]
 ```
 
@@ -49,12 +48,13 @@ covers public routing and manual supervision without login/boot startup.
 
 There is no database, account system or background calculation queue. Notes are processed
 in request memory and remain in the browser until cleared or the page is
-reloaded. The local profile caches FX in `.trip-dollar/fx-cache.json`; the installed
-profile uses its private runtime's `state/fx-cache.json` and operational logs. Missing
-rates use the Frankfurter ECB feed; only currency codes and dates go to that
-provider. Manual rates avoid network access when all required pairs are supplied.
-Cache writes are atomic, and a process-local lock serializes shared cache
-lookups in the threaded server.
+reloaded. Exchange rates are not cached or written to disk. Each calculation
+fetches each missing currency pair once from the Frankfurter ECB feed and keeps
+it in that calculation's configuration. Only currency codes and dates go to the
+provider; the audit records the rate, requested date, published date and retrieval
+time. Manual rates avoid network access when all required pairs are supplied.
+There is no shared FX state or cache lock. The installed profile writes private
+operational logs, not expense notes.
 
 ## Parser and calculation flow
 
@@ -99,7 +99,8 @@ flowchart TD
    establishes the initial context. Without either, an unlabelled first expense
    is an error before any rate lookup. Missing rates use an explicit rate date or
    the latest calendar date inferred from document headings. Choosing the FX date
-   does not reorder records. Provider results and cached rates retain provenance.
+   does not reorder records. Each missing pair is fetched once per calculation;
+   provider results retain provenance in the audit.
 
 5. **Normalize effective fields.** `core/engine.py` resolves payer codes to stable
    participant IDs, validates amounts and normalizes allocations. `A` splits

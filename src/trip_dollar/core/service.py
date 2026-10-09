@@ -4,8 +4,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date
 import hashlib
-from pathlib import Path
-from threading import RLock
 from typing import Callable
 
 from .config import load_config
@@ -13,8 +11,7 @@ from .engine import LedgerEngine
 from .fx import currency_code, fetch_rate, infer_date, parse_equations
 from .parser import expand_records, import_document, parse_fields, resolve_allocation
 
-_rate_lock = RLock()
-RateLoader = Callable[[str, str, date, Path], dict]
+RateLoader = Callable[[str, str, date], dict]
 
 
 class InputError(ValueError):
@@ -36,7 +33,6 @@ class LedgerOptions:
 
 def prepare_config(
     options: LedgerOptions, source: str, *, rate_loader: RateLoader = fetch_rate,
-    cache_path: Path = Path(".trip-dollar/fx-cache.json"),
 ) -> tuple[dict, list[dict], list[dict]]:
     people = []
     for value in options.participants:
@@ -93,10 +89,7 @@ def prepare_config(
             raise InputError(str(exc), field="fx_date") from exc
         for currency in sorted(missing):
             try:
-                # The shared cache uses atomic writes; serialize its read/write cycle
-                # within the threaded local server to avoid losing another pair.
-                with _rate_lock:
-                    reference = rate_loader(currency, base, requested, cache_path)
+                reference = rate_loader(currency, base, requested)
             except (ValueError, OSError) as exc:
                 raise InputError(str(exc), field="fx") from exc
             config["fx_rates"][currency] = reference["rate"]

@@ -22,7 +22,7 @@ def install(root: Path, repo: Path = REPO):
         require_private(root, directory=True)
     else:
         root.mkdir(parents=True, mode=0o700)
-    for directory in ("state", "logs", "jobs", "venv"):
+    for directory in ("logs", "jobs", "venv"):
         path = root / directory
         if path.exists() or path.is_symlink():
             require_private(path, directory=True)

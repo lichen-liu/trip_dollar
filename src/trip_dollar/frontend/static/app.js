@@ -431,7 +431,7 @@ function renderRates(audit) {
       item.append(
         element(
           "p",
-          `${rate.source} · Published ${rate.effective_date} · Requested ${rate.requested_date}${rate.cached ? " · From cache" : ""}`,
+          `${rate.source} · Published ${rate.effective_date} · Requested ${rate.requested_date}`,
         ),
       );
       // Provider URL remains in the audit. The UI uses a fixed trusted link.

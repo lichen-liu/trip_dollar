@@ -28,7 +28,6 @@ def create_server(root: Path):
     settings = read_settings(root)
     app = create_app({
         "TRUSTED_HOSTS": [settings["hostname"], "localhost", "127.0.0.1", "[::1]"],
-        "FX_CACHE": root / "state" / "fx-cache.json",
         "MAX_CONCURRENT_CALCULATIONS": 2,
     })
     options = {

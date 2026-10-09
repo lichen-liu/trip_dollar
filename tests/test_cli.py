@@ -57,7 +57,7 @@ def test_initial_currency_resolves_first_expense(tmp_path):
 
 def test_only_missing_rates_are_fetched(tmp_path, monkeypatch):
     calls = []
-    def fetch(currency, base, requested, cache):
+    def fetch(currency, base, requested):
         calls.append((currency, base, requested.isoformat()))
         return {"currency": currency, "base_currency": base, "rate": "1.5", "source": "test", "effective_date": "2025-08-15"}
     monkeypatch.setattr("trip_dollar.cli.fetch_rate", fetch)
@@ -74,6 +74,20 @@ def test_failed_lookup_prints_no_payments(tmp_path, monkeypatch, capsys):
     assert main(arguments(tmp_path, "L100ISKA") + ["--fx-date", "2025-08-16"]) == 2
     out = capsys.readouterr()
     assert not out.out and "--fx" in out.err
+
+
+def test_repeated_expenses_fetch_each_missing_pair_once_per_run(tmp_path, monkeypatch):
+    calls = []
+    def fetch(currency, base, requested):
+        calls.append(currency)
+        return {"currency": currency, "base_currency": base, "rate": "1", "source": "test"}
+    monkeypatch.setattr("trip_dollar.cli.fetch_rate", fetch)
+    args = arguments(tmp_path, "L100ISKA B20A D30USDA L40ISKA") + ["--fx-date", "2025-08-16"]
+    first = audit_run(args, tmp_path)
+    second = audit_run(args, tmp_path)
+    assert calls == ["ISK", "USD", "ISK", "USD"]
+    assert first["total_expense"] == second["total_expense"] == "190"
+    assert not (tmp_path / ".trip-dollar").exists()
 
 
 @pytest.mark.parametrize("text", ["", "L10CAD gibberish", "L-10CAD"])
