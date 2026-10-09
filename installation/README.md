@@ -35,13 +35,14 @@ Trip Split/
 ├── installation.json     Installation receipt
 ├── tunnel-token          Added later with a hidden prompt
 ├── jobs/                 Manually loaded plist files, not login items
-├── logs/                 Private operational logs
-└── state/                FX cache; no saved expense notes
+└── logs/                 Private operational logs
 ```
 
 The runtime directory is owner-only (0700); generated settings, receipts, job
 files and tokens are owner-only (0600). Nothing sensitive belongs in the repo.
 Editing or switching the Git checkout does not change the running app snapshot.
+There is no FX cache or state directory in a new installation. Old cache files
+from an earlier version are ignored and left untouched when updating.
 
 For an update, run `./deployment/trip-split stop`, check out the intended code,
 and run the installer again. The same runtime and token are retained. Then start

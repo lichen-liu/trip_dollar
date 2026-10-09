@@ -126,7 +126,7 @@ global or exact; the origin busy safeguard remains useful.
 ## Public-repository and runtime security
 
 - Serve only the packaged frontend; never serve the checkout, private runtime,
-  cache, logs, token file or a directory listing.
+  logs, token file or a directory listing.
 - Bind the app and connector metrics to loopback. Don't open router ports, bind
   to `0.0.0.0`, disable TLS validation, enable Flask debug, or run as root.
 - Preserve hostname and same-origin validation. The installed serving profile
@@ -139,7 +139,9 @@ global or exact; the origin busy safeguard remains useful.
 - Requests are isolated; there is no shared stored ledger or public history.
   Raw notes travel through Cloudflare to this Mac over HTTPS; Cloudflare is a
   reverse proxy, not end-to-end private storage. Rate lookup sends only currencies
-  and dates onward to the FX provider.
+  and dates onward to the FX provider. Each calculation fetches each missing
+  currency pair once; no FX cache is read or written. Supply manual rates for
+  calculations that need to work without the provider.
 - `server.log` rotates; startup and tunnel logs are private. Tunnel logging is
   error-only. Inspect log sizes
   periodically. Avoid debug logging and never log request bodies or credentials.

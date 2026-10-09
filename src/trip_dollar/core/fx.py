@@ -9,12 +9,9 @@ import json
 import re
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation, localcontext
-from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from urllib.error import URLError
-import os
-import tempfile
 
 
 class FXError(ValueError):
@@ -85,37 +82,16 @@ def _download(url: str):
         raise FXError("Could not retrieve online rates. Retry or supply --fx CURRENCY=amountBASE.") from exc
 
 
-def fetch_rate(currency: str, base: str, requested: date, cache_path: Path) -> dict:
+def fetch_rate(currency: str, base: str, requested: date) -> dict:
     """Use the newest ECB observation on/before the date, within seven days.
 
     Query a bounded range explicitly: the provider cannot silently substitute
-    today's rate for a historical date. The cache retains the original metadata.
+    today's rate for a historical date. Each call fetches a fresh observation
+    and returns its provenance without reading or writing local files.
     """
     if requested > date.today():
         raise FXError("Online rates are unavailable for future dates. Supply an explicit --fx rate.")
     start = requested - timedelta(days=7)
-    key = f"ecb:{currency}:{base}:{requested}"
-    cache = {}
-    if cache_path.exists():
-        try:
-            cache = json.loads(cache_path.read_text())
-            if not isinstance(cache, dict):
-                raise ValueError
-        except (ValueError, OSError) as exc:
-            raise FXError(f"Cannot read FX cache {cache_path}. Repair the file or supply --fx explicitly.") from exc
-    if key in cache:
-        entry = cache[key]
-        try:
-            valid = (entry["currency"] == currency and entry["base_currency"] == base
-                     and entry["requested_date"] == requested.isoformat()
-                     and start <= date.fromisoformat(entry["effective_date"]) <= requested
-                     and entry["source"] == "Frankfurter / ECB")
-            positive_decimal(entry["rate"])
-            if not valid:
-                raise ValueError
-        except (KeyError, TypeError, ValueError) as exc:
-            raise FXError(f"Invalid FX cache entry in {cache_path}.") from exc
-        return {**entry, "cached": True}
     query = urlencode({"base": currency, "quotes": base, "from": start.isoformat(),
                        "to": requested.isoformat(), "providers": "ecb"})
     url = f"https://api.frankfurter.dev/v2/rates?{query}"
@@ -134,19 +110,6 @@ def fetch_rate(currency: str, base: str, requested: date, cache_path: Path) -> d
         effective, rate = max(observations, key=lambda item: item[0])
     except (ValueError, KeyError, TypeError) as exc:
         raise FXError(f"No usable {currency}→{base} rate on or before {requested}. Supply --fx explicitly.") from exc
-    entry = {"currency": currency, "base_currency": base, "rate": str(rate),
-             "requested_date": requested.isoformat(), "effective_date": effective.isoformat(),
-             "retrieved_at": datetime.now(timezone.utc).isoformat(), "source": "Frankfurter / ECB", "url": url}
-    cache[key] = entry
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    # Replace atomically so an interrupted write cannot truncate the cache.
-    temp_name = None
-    try:
-        with tempfile.NamedTemporaryFile(mode="w", dir=cache_path.parent, delete=False) as temporary:
-            temp_name = temporary.name
-            json.dump(cache, temporary, indent=2)
-        os.replace(temp_name, cache_path)
-    finally:
-        if temp_name and os.path.exists(temp_name):
-            os.unlink(temp_name)
-    return {**entry, "cached": False}
+    return {"currency": currency, "base_currency": base, "rate": str(rate),
+            "requested_date": requested.isoformat(), "effective_date": effective.isoformat(),
+            "retrieved_at": datetime.now(timezone.utc).isoformat(), "source": "Frankfurter / ECB", "url": url}

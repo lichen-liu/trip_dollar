@@ -49,9 +49,8 @@ def main(argv: list[str] | None = None) -> int:
         audit.update({"configuration": config, "fx_provenance": provenance,
                       "source_sha256": hashlib.sha256(source.encode()).hexdigest()})
         if args.audit:
-            inputs = [args.input, Path(".trip-dollar/fx-cache.json")]
-            if args.audit.resolve() in {p.resolve() for p in inputs if p}:
-                raise ValueError("--audit must not overwrite an input or FX cache file.")
+            if args.audit.resolve() == args.input.resolve():
+                raise ValueError("--audit must not overwrite the input file.")
             args.audit.write_text(json.dumps(audit, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         if result.errors:
             print("Cannot calculate settlement:", file=sys.stderr)

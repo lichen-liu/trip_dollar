@@ -36,7 +36,7 @@ until you calculate again. Invalid records produce an error, never a payment pla
 
 The Python server uses the same parser, FX resolver, and accounting engine as
 the CLI. Notes are held only for the request and browser session, not saved on
-the server; only the exchange-rate cache is written. Uploads are limited to 64 KB.
+the server. Exchange rates are not cached. Uploads are limited to 64 KB.
 There are no third-party scripts, analytics, or frontend build tools.
 
 The web interface is called **Trip Split**, with **split.boboji.fyi** as its
@@ -100,8 +100,10 @@ currency inheritance; date headings do not change currency.
 consistent equation per pair. Rates must be positive and finite.
 
 With all rates supplied, no internet connection is needed. Otherwise the app
-uses [Frankfurter's ECB feed](https://frankfurter.dev/) and caches results in
-`.trip-dollar/fx-cache.json`. Only currency codes and dates are sent to the provider.
+uses [Frankfurter's ECB feed](https://frankfurter.dev/). Each calculation fetches
+each missing currency pair once, regardless of how many expenses use it. Rates
+are not shared between calculations or saved to disk. Only currency codes and
+dates are sent to the provider. The audit records the exact rates used.
 
 The rate date defaults to the latest trip date from a `YYYY.Month.Title` heading
 and `MMDD` date headings. Weekends and holidays use the latest published rate
@@ -152,7 +154,7 @@ Flask; the frontend never calculates monetary balances or payments.
 
 `installation/` installs a private app snapshot; `deployment/` contains the
 manual start/stop controller, serving profile and free-tier deployment plan.
-Credentials, installed packages, logs and cache are outside the public repo.
+Credentials, installed packages and operational logs are outside the public repo.
 
 ## Python API
 

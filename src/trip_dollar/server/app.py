@@ -79,7 +79,7 @@ def create_app(config: dict | None = None) -> Flask:
     frontend = Path(__file__).resolve().parent.parent / "frontend"
     app = Flask(__name__, template_folder=str(frontend / "templates"),
                 static_folder=str(frontend / "static"), static_url_path="/static")
-    app.config.update(MAX_CONTENT_LENGTH=128_000, FX_CACHE=Path(".trip-dollar/fx-cache.json"),
+    app.config.update(MAX_CONTENT_LENGTH=128_000,
                       TRUSTED_HOSTS=["localhost", "127.0.0.1", "[::1]"],
                       MAX_CONCURRENT_CALCULATIONS=2)
     if config:
@@ -135,7 +135,7 @@ def create_app(config: dict | None = None) -> Flask:
             return jsonify(error="Check the expense form.", settlements=[]), 400
         try:
             options, source = request_options(data)
-            kwargs = {"cache_path": app.config["FX_CACHE"]}
+            kwargs = {}
             if app.config.get("RATE_LOADER"):
                 kwargs["rate_loader"] = app.config["RATE_LOADER"]
             audit = calculate(options, source, **kwargs)
@@ -148,9 +148,6 @@ def create_app(config: dict | None = None) -> Flask:
             return jsonify(error="An amount is too large to calculate safely. Check the notes and rates.", settlements=[]), 422
         except ValueError as exc:
             return jsonify(error=str(exc), settlements=[]), 422
-        except OSError:
-            app.logger.exception("FX cache unavailable")
-            return jsonify(error="Could not access the exchange-rate cache. Try a manual rate.", settlements=[]), 503
 
     @app.errorhandler(HTTPException)
     def http_error(exc):

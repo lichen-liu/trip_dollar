@@ -33,7 +33,7 @@ def scripts(monkeypatch):
 def runtime(tmp_path):
     root = tmp_path / "Trip Split"
     root.mkdir(mode=0o700)
-    for name in ("jobs", "logs", "state", "venv"):
+    for name in ("jobs", "logs", "venv"):
         (root / name).mkdir(mode=0o700)
     settings = root / "settings.json"
     settings.write_text(json.dumps({"hostname": "split.boboji.fyi", "port": 8000}))
@@ -146,7 +146,7 @@ def test_public_serving_profile_trusts_only_local_https_proxy(scripts, runtime):
     assert options["trusted_proxy_headers"] == {"x-forwarded-proto"}
     assert options["expose_tracebacks"] is False
     assert options["connection_limit"] == 32
-    assert app.config["FX_CACHE"] == runtime / "state/fx-cache.json"
+    assert "FX_CACHE" not in app.config
     # Use Waitress's actual middleware, not an independently configured ProxyFix.
     keys = ("trusted_proxy", "trusted_proxy_count", "trusted_proxy_headers")
     app.wsgi_app = proxy_headers_middleware(
@@ -229,6 +229,7 @@ def test_installer_makes_snapshot_without_starting_or_replacing_token(scripts, r
         return subprocess.CompletedProcess(args, 0, stdout=output)
     monkeypatch.setattr(installer.subprocess, "run", fake_run)
     installer.install(runtime)
+    assert not (runtime / "state").exists()
     assert (runtime / "tunnel-token").read_bytes() == b"placeholder-only"
     receipt = json.loads((runtime / "installation.json").read_text())
     assert receipt["source_commit"] == "test-commit"
