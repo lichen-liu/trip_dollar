@@ -6,6 +6,7 @@ import getpass
 import os
 from pathlib import Path
 import plistlib
+import re
 import shutil
 import socket
 import stat
@@ -156,15 +157,32 @@ def save_token(root: Path):
     print("Token saved privately outside the repository. Nothing was started.")
 
 
+def process_name(pid: int) -> str:
+    """Read the executable name only; command arguments may contain secrets."""
+    try:
+        result = subprocess.run(["/bin/ps", "-p", str(pid), "-o", "comm="],
+                                capture_output=True, text=True, timeout=5)
+    except (OSError, subprocess.SubprocessError):
+        return "unavailable"
+    if result.returncode or not result.stdout.strip():
+        return "unavailable"
+    return Path(result.stdout.strip()).name
+
+
 def status(root: Path):
     for job in LABELS:
         result = launchctl("print", target(job))
         if result.returncode:
-            print(f"{job}: stopped (not loaded)")
+            print(f"{job}: stopped (not loaded); PID: none; process: none")
         else:
-            state = next((line.strip() for line in result.stdout.splitlines()
-                          if line.strip().startswith("state =")), "loaded")
-            print(f"{job}: {state}; automatic restart enabled")
+            # launchctl indents job fields once; nested service state is not
+            # the state or PID of the managed process.
+            state_match = re.search(r"(?m)^\tstate = (.+)$", result.stdout)
+            pid_match = re.search(r"(?m)^\tpid = ([1-9][0-9]*)$", result.stdout)
+            state = f"state = {state_match[1]}" if state_match else "loaded"
+            pid = pid_match[1] if pid_match else "none"
+            name = process_name(int(pid)) if pid_match else "none"
+            print(f"{job}: {state}; PID: {pid}; process: {name}; automatic restart enabled")
     print(f"Private logs: {root / 'logs'}")
     print("This reports local processes, not public tunnel connectivity.")
 

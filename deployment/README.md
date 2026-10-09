@@ -86,7 +86,17 @@ From the repo root:
 waits for local health, then loads the connector. A failed local start unloads
 both jobs. Tunnel registration is asynchronous: a loaded process is not proof
 that the public route works. `status` distinguishes a stopped job from a loaded
-job and shows its local process state. It makes no claim about public health.
+job and shows its local process state, PID and executable name:
+
+```text
+server: state = running; PID: 12345; process: Python; automatic restart enabled
+tunnel: state = running; PID: 12346; process: cloudflared; automatic restart enabled
+```
+
+PIDs change after a restart. A loaded job waiting to restart has no current PID;
+an unloaded job shows `stopped (not loaded)`. The name may be `unavailable` if
+the process exits during the check or cannot be inspected. Status never prints
+command arguments or credentials, and makes no claim about public health.
 
 The current foreground preview also uses port 8000. Stop that preview before
 starting the installed app. The controller will not kill an unrelated process
