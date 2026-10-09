@@ -105,7 +105,8 @@ flowchart TD
 5. **Normalize effective fields.** `core/engine.py` resolves payer codes to stable
    participant IDs, validates amounts and normalizes allocations. `A` splits
    equally among all active participants; a participant suffix allocates 100% to
-   that person; no suffix uses the configured default split. Payer and economic
+   that person; multiple distinct participant letters split equally among those
+   people; no suffix uses the configured default split. Payer and economic
    bearer are independent. Separate overrides take priority when supplied to the
    Python API; the web form and simple CLI do not expose an override editor.
 

@@ -42,6 +42,67 @@ def test_payer_boundary_vs_single_allocation():
     assert result.transactions[1].shares == {"charlie": Decimal(20)}
 
 
+@pytest.mark.parametrize("text", ["C500CADLC", "C500LC CAD", "B1CAD C500LC"])
+def test_multi_person_suffix_splits_equally_using_stable_ids(text):
+    result = engine().process(text)
+    assert not result.errors
+    tx = result.transactions[-1]
+    assert tx.payer_id == "charlie"
+    assert tx.allocation.type == "equal_split"
+    assert tx.allocation.participants == ("left", "charlie")
+    assert tx.shares == {"left": Decimal(250), "charlie": Decimal(250)}
+    assert sum(result.paid.values()) == sum(result.share.values())
+    assert sum(result.net.values()) == 0
+
+
+@pytest.mark.parametrize("separator", ["", " ", ";"])
+def test_multi_person_suffix_does_not_swallow_the_next_payer(separator):
+    text = separator.join(["C60CADLB", "L40BC", "B20LC"])
+    result = engine().process(text)
+    assert not result.errors
+    assert [tx.raw_text for tx in result.transactions] == ["C60CADLB", "L40BC", "B20LC"]
+    assert [tx.payer_code for tx in result.transactions] == ["C", "L", "B"]
+    assert [tx.shares for tx in result.transactions] == [
+        {"left": Decimal(30), "bob": Decimal(30)},
+        {"bob": Decimal(20), "charlie": Decimal(20)},
+        {"left": Decimal(10), "charlie": Decimal(10)},
+    ]
+    for tx in result.transactions:
+        start, end = tx.source_span
+        assert text[start:end] == tx.raw_text
+
+
+@pytest.mark.parametrize("token", ["LL", "LCL", "LA", "AL", "LZ"])
+def test_invalid_multi_person_suffix_blocks_settlement(token):
+    result = engine().process(f"C100CAD{token}")
+    assert result.errors
+    assert not result.settlements
+
+
+def test_structured_multi_person_allocation_and_three_way_decimal_conservation():
+    result = engine().process([{"payer_code": "C", "amount": "100", "currency": "CAD", "allocation": "LBC"}])
+    assert not result.errors
+    tx = result.transactions[0]
+    assert tx.allocation.type == "equal_split"
+    assert set(tx.shares) == {"left", "bob", "charlie"}
+    assert all(abs(value - Decimal(100) / 3) < engine().config.tolerance for value in tx.shares.values())
+    assert abs(sum(result.net.values())) < engine().config.tolerance
+
+
+def test_multi_person_currency_collision_is_rejected():
+    ledger = engine()
+    config = {
+        "base_currency": "CAD",
+        "participants": [{"id": p.id, "code": p.code} for p in ledger.config.participants],
+        "fx_rates": {"CAD": 1, "LC": 2},
+        "initial_currency": "CAD",
+        "default_allocation": {"type": "all_equal"},
+    }
+    result = LedgerEngine(config).process("B100LC")
+    assert any("ambiguous" in error for error in result.errors)
+    assert not result.settlements
+
+
 def test_multi_record_ids_overrides_and_original_order():
     result = engine().process([
         {"id": "line", "date": "0902", "raw_text": "L10USD B20 C30"},

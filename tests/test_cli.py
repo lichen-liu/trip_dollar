@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -53,6 +54,16 @@ def test_initial_currency_resolves_first_expense(tmp_path):
     args = arguments(tmp_path, "L100A B100A")
     result = audit_run(args + ["--initial-currency", "ISK", "--fx", "ISK=0.01CAD"], tmp_path)
     assert result["total_expense"] == "2.00"
+
+
+def test_cli_multi_person_suffix_and_adjacent_records(tmp_path):
+    args = arguments(tmp_path, "Dinner: D100CADLBD40LM")
+    audit = audit_run(args, tmp_path)
+    assert [tx["raw_text"] for tx in audit["transactions"]] == ["D100CADLB", "D40LM"]
+    assert [tx["shares"] for tx in audit["transactions"]] == [{"L": "50", "B": "50"}, {"L": "20", "M": "20"}]
+    assert audit["paid"] == {"L": "0", "B": "0", "D": "140", "M": "0"}
+    assert audit["share"] == {"L": "70", "B": "50", "D": "0", "M": "20"}
+    assert sum(Decimal(value) for value in audit["net"].values()) == 0
 
 
 def test_only_missing_rates_are_fetched(tmp_path, monkeypatch):

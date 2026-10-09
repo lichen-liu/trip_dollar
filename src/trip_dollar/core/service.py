@@ -73,7 +73,7 @@ def prepare_config(
         if fields.amount is None or not fields.amount.is_finite() or fields.amount < 0:
             raise InputError(f"Line {line}: the amount must be finite and nonnegative.", line=line)
         if resolve_allocation(fields.allocation_token, registry) is None:
-            raise InputError(f"Line {line}: allocation does not match a participant or A.", line=line)
+            raise InputError(f"Line {line}: use A for everyone, or distinct registered participant letters for the allocation.", line=line)
         if fields.explicit_currency:
             current = currency_code(fields.explicit_currency)
         if current is None:
