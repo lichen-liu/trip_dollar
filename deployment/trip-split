@@ -1,6 +1,6 @@
 #!/bin/sh
 set -eu
-trip_split_root="$HOME/Library/Application Support/Trip Split"
+trip_split_root="$HOME/Library/Application Support/fyi.boboji.split"
 if [ ! -x "$trip_split_root/venv/bin/python" ]; then
     case "${1:-}" in
         stop|status) exec python3 "$(dirname "$0")/manage.py" "$@" ;;
