@@ -98,6 +98,7 @@ def test_status_reports_pids_and_executable_names_without_arguments(scripts, run
     output = capsys.readouterr().out
     assert "server: state = running; PID: 12345; process: Python; automatic restart enabled" in output
     assert "tunnel: state = running; PID: 12346; process: cloudflared; automatic restart enabled" in output
+    assert "Server port: 8000 (configured; http://127.0.0.1:8000/)" in output
     assert str(runtime / "logs") in output
     assert "not public tunnel connectivity" in output
     assert calls == [("print", manage.target("server")), ("print", manage.target("tunnel"))]
@@ -312,3 +313,77 @@ def test_start_of_partial_job_set_requires_explicit_stop(scripts, runtime, monke
     monkeypatch.setattr(manage, "loaded", lambda job: job == "server")
     with pytest.raises(ValueError, match="stop, then start"):
         manage.start(runtime)
+
+
+def test_probe_checks_real_app_with_manual_fx(scripts, monkeypatch):
+    manage, serving, _ = scripts
+    from trip_dollar.server.app import create_app
+    client = create_app({"TESTING": True, "RATE_LOADER": lambda *args, **kwargs: pytest.fail("No external FX lookup")}).test_client()
+    paths = []
+
+    class Response:
+        def __init__(self, request):
+            self.url = request.full_url
+            path = self.url.removeprefix("http://127.0.0.1:8000")
+            paths.append(path)
+            self.response = client.open(path, base_url="http://127.0.0.1:8000", method=request.get_method(), data=request.data,
+                                        headers=dict(request.header_items()))
+            self.status = self.response.status_code
+        def __enter__(self): return self
+        def __exit__(self, *args): pass
+        def geturl(self): return self.url
+        def read(self, limit): return self.response.data[:limit]
+
+    class Opener:
+        def open(self, request, timeout):
+            assert timeout == 10
+            return Response(request)
+
+    monkeypatch.setattr(manage, "build_opener", lambda handler: Opener())
+    manage.probe("http://127.0.0.1:8000")
+    assert paths == ["/", "/static/app.js", "/health", "/api/calculate"]
+
+
+@pytest.mark.parametrize("public,base", [(False, "http://127.0.0.1:8000"), (True, "https://split.boboji.fyi")])
+def test_check_uses_configured_address(scripts, runtime, monkeypatch, capsys, public, base):
+    manage, _, _ = scripts
+    calls = []
+    monkeypatch.setattr(manage, "probe", calls.append)
+    manage.check(runtime, public=public)
+    assert calls == [base]
+    assert base in capsys.readouterr().out
+
+
+def test_probe_rejects_cross_origin_redirects(scripts, monkeypatch):
+    manage, _, _ = scripts
+    def build(handler):
+        from urllib.request import Request
+        with pytest.raises(ValueError, match="redirected away"):
+            handler.redirect_request(Request("https://split.boboji.fyi/"), None, 302,
+                                     "Found", {}, "https://other.invalid/")
+        raise RuntimeError("redirect tested")
+    monkeypatch.setattr(manage, "build_opener", build)
+    with pytest.raises(RuntimeError, match="redirect tested"):
+        manage.probe("https://split.boboji.fyi")
+
+
+def test_public_option_only_applies_to_check(scripts):
+    manage, _, _ = scripts
+    with pytest.raises(SystemExit) as error:
+        manage.main(["status", "--public"])
+    assert error.value.code == 2
+
+
+@pytest.mark.parametrize("settings", [None, '{"hostname": "invalid", "port": 80}'])
+def test_status_reports_jobs_when_port_settings_are_unavailable(scripts, runtime, monkeypatch, capsys, settings):
+    manage, _, _ = scripts
+    if settings is None:
+        (runtime / "settings.json").unlink()
+    else:
+        (runtime / "settings.json").write_text(settings)
+    monkeypatch.setattr(manage, "launchctl", lambda *args: subprocess.CompletedProcess(args, 1))
+    manage.status(runtime)
+    output = capsys.readouterr().out
+    assert "server: stopped" in output
+    assert "tunnel: stopped" in output
+    assert "Server port: unavailable" in output

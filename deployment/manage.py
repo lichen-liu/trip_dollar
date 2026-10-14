@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import getpass
+import json
 import os
 from pathlib import Path
 import plistlib
@@ -15,7 +16,8 @@ import sys
 import tempfile
 import time
 from urllib.error import URLError
-from urllib.request import urlopen
+from urllib.parse import urlsplit
+from urllib.request import HTTPRedirectHandler, Request, build_opener, urlopen
 
 from serve import read_settings
 
@@ -183,21 +185,91 @@ def status(root: Path):
             pid = pid_match[1] if pid_match else "none"
             name = process_name(int(pid)) if pid_match else "none"
             print(f"{job}: {state}; PID: {pid}; process: {name}; automatic restart enabled")
+    try:
+        settings = read_settings(root)
+    except (OSError, ValueError, AttributeError):
+        print("Server port: unavailable (settings missing or invalid)")
+    else:
+        print(f"Server port: {settings['port']} (configured; http://127.0.0.1:{settings['port']}/)")
     print(f"Private logs: {root / 'logs'}")
-    print("This reports local processes, not public tunnel connectivity.")
+    print("This reports local processes, not public tunnel connectivity. Use check --public.")
+
+
+def probe(base_url: str):
+    """Check the app and calculator without external FX lookups or stored data."""
+    def origin(url):
+        parts = urlsplit(url)
+        return parts.scheme, parts.hostname, parts.port or (443 if parts.scheme == "https" else 80)
+
+    expected = origin(base_url)
+
+    class SameOriginRedirect(HTTPRedirectHandler):
+        def redirect_request(self, request, fp, code, msg, headers, new_url):
+            if origin(new_url) != expected:
+                raise ValueError("Trip Split redirected away from the configured origin.")
+            return super().redirect_request(request, fp, code, msg, headers, new_url)
+
+    opener = build_opener(SameOriginRedirect())
+
+    def fetch(path, payload=None):
+        body = json.dumps(payload).encode() if payload is not None else None
+        request = Request(base_url + path, data=body,
+                          headers={"Content-Type": "application/json", "Origin": base_url})
+        with opener.open(request, timeout=10) as response:
+            if origin(response.geturl()) != expected:
+                raise ValueError("The response is not from the configured Trip Split origin.")
+            content = response.read(1_000_001)
+            if response.status != 200 or len(content) > 1_000_000:
+                raise ValueError("Unexpected or oversized response from Trip Split.")
+            return content
+
+    if b"<title>Trip Split" not in fetch("/"):
+        raise ValueError("The URL is not serving Trip Split.")
+    if b"/api/calculate" not in fetch("/static/app.js"):
+        raise ValueError("The Trip Split frontend is missing or outdated.")
+    health = json.loads(fetch("/health"))
+    if not isinstance(health, dict) or health.get("status") != "ok":
+        raise ValueError("Trip Split is not healthy.")
+    # Fixed inputs and manual FX make this independent of upstream providers.
+    result = json.loads(fetch("/api/calculate", {
+        "source": "2026.Aug.A weekend away\n\n0815\nBreakfast: L60CAD\nMuseum: C90A\nTaxi: B24CUSD\n\n0814\nDinner: L48A\nSouvenir: C20BCAD\nSnacks: B30A",
+        "participants": [{"code": "L", "name": "Lee", "split": True},
+                         {"code": "B", "name": "Blair", "split": True},
+                         {"code": "C", "name": "Casey", "split": False}],
+        "base": "CAD", "fx": "USD=1.25CAD",
+    }))
+    display = result.get("display") if isinstance(result, dict) else None
+    audit = result.get("audit") if isinstance(result, dict) else None
+    if (not isinstance(display, dict) or display.get("total") != "290.00"
+            or not isinstance(audit, dict) or not isinstance(audit.get("settlements"), list)
+            or not audit["settlements"]):
+        raise ValueError("The example calculation did not return the expected payment plan.")
+
+
+def check(root: Path, *, public: bool = False):
+    require_private(root, directory=True)
+    require_private(root / "settings.json")
+    settings = read_settings(root)
+    base = f"https://{settings['hostname']}" if public else f"http://127.0.0.1:{settings['port']}"
+    probe(base)
+    print(f"Verified {'live' if public else 'locally'}: {base}/ · health, frontend and example calculation passed")
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Manually control Trip Split on this Mac.")
-    parser.add_argument("command", choices=["start", "stop", "status", "tunnel"])
+    parser.add_argument("command", choices=["start", "stop", "status", "tunnel", "check"])
+    parser.add_argument("--public", action="store_true", help="verify the configured HTTPS domain")
     args = parser.parse_args(argv)
+    if args.public and args.command != "check":
+        parser.error("--public is only used with check.")
     if sys.platform != "darwin" or os.getuid() == 0:
         parser.error("Run this on macOS as your normal user, without sudo.")
     os.umask(0o077)
     root = runtime_root()
     try:
         {"start": lambda: start(root), "stop": stop,
-         "status": lambda: status(root), "tunnel": lambda: save_token(root)}[args.command]()
+         "status": lambda: status(root), "tunnel": lambda: save_token(root),
+         "check": lambda: check(root, public=args.public)}[args.command]()
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
         parser.exit(1, f"Error: {exc}\n")
 
