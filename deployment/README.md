@@ -79,6 +79,8 @@ From the repo root:
 ```sh
 ./deployment/trip-split start
 ./deployment/trip-split status
+./deployment/trip-split check
+./deployment/trip-split check --public
 ./deployment/trip-split stop
 ```
 
@@ -86,12 +88,20 @@ From the repo root:
 waits for local health, then loads the connector. A failed local start unloads
 both jobs. Tunnel registration is asynchronous: a loaded process is not proof
 that the public route works. `status` distinguishes a stopped job from a loaded
-job and shows its local process state, PID and executable name:
+job and shows its local process state, PID, executable name and configured server port:
 
 ```text
 server: state = running; PID: 12345; process: Python; automatic restart enabled
 tunnel: state = running; PID: 12346; process: cloudflared; automatic restart enabled
+Server port: 8000 (configured; http://127.0.0.1:8000/)
 ```
+
+`check` verifies the local page, frontend, health and a fixed example calculation
+with manual FX rates. `check --public` runs the same checks through the configured
+HTTPS hostname with normal TLS validation. Failures exit nonzero.
+
+The launcher uses the installed `manage.py`, so repository edits alone do not
+update its commands. For a full app update, stop, rerun the installer, then start.
 
 PIDs change after a restart. A loaded job waiting to restart has no current PID;
 an unloaded job shows `stopped (not loaded)`. The name may be `unavailable` if
