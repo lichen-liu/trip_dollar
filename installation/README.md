@@ -15,7 +15,7 @@ the installer uses whichever supported Python you invoke. No sudo is needed.
 The installer:
 
 1. Refuses to update while either managed job is loaded.
-2. Creates a private runtime at `~/Library/Application Support/Trip Split`.
+2. Creates a private runtime at `~/Library/Application Support/fyi.boboji.split`.
 3. Builds a wheel from this checkout and installs it non-editably with the `web`
    dependencies into a dedicated virtual environment. Build/runtime dependencies
    are downloaded with pip; no development or test dependencies are installed.
@@ -27,7 +27,7 @@ The installer:
 The runtime contains:
 
 ```text
-Trip Split/
+fyi.boboji.split/
 ├── venv/                 Installed Python app and dependencies
 ├── manage.py             Manual control
 ├── serve.py              Loopback server configuration
@@ -48,5 +48,29 @@ For an update, run `./deployment/trip-split stop`, check out the intended code,
 and run the installer again. The same runtime and token are retained. Then start
 explicitly. Failed installation checks leave the service stopped: fix the issue
 and rerun the installer before restarting. Updates are not atomic rollbacks.
+
+## Moving an existing installation
+
+If you installed under `~/Library/Application Support/Trip Split`, stop the app
+before installing into the new directory:
+
+```sh
+./deployment/trip-split stop
+python3 installation/install.py
+old_root="$HOME/Library/Application Support/Trip Split"
+new_root="$HOME/Library/Application Support/fyi.boboji.split"
+cp "$old_root/settings.json" "$new_root/settings.json"
+chmod 600 "$new_root/settings.json"
+if [ -f "$old_root/tunnel-token" ]; then
+    cp "$old_root/tunnel-token" "$new_root/tunnel-token"
+    chmod 600 "$new_root/tunnel-token"
+fi
+```
+
+The installer creates a fresh virtual environment at the new path. Do not move
+the old virtual environment or job files: they contain absolute paths. The job
+labels remain the same, so the stop command can unload the old installation.
+The old directory is retained; after verifying the new installation, you can
+remove it. Start explicitly with `./deployment/trip-split start` when ready.
 
 Continue with the [deployment plan](../deployment/README.md).

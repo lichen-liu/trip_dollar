@@ -25,7 +25,7 @@ LABELS = {"server": "fyi.boboji.trip-split.server", "tunnel": "fyi.boboji.trip-s
 
 
 def runtime_root() -> Path:
-    return Path.home() / "Library" / "Application Support" / "Trip Split"
+    return Path.home() / "Library" / "Application Support" / "fyi.boboji.split"
 
 
 def require_private(path: Path, *, directory: bool = False):
