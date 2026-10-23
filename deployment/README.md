@@ -196,9 +196,100 @@ checkout separately with `git pull`. Public verification remains explicit:
 ```
 
 Deployment preserves private settings, the tunnel token and existing user data.
-A failed stop prevents installation. A failed installation leaves the app stopped
+Stop waits up to 20 seconds per job for launchd to remove its label before
+installation continues. A failed stop prevents installation. A failed installation leaves the app stopped
 and marked incomplete; a failed start/final check unloads both jobs. Cleanup errors
 are reported explicitly. There is no automatic rollback. Rerun a successful
 installation/deployment before starting after an interrupted install. The separate
 installer and `start`, `stop`, `status`, `tunnel` and `check` commands remain.
 Nothing is installed for login/boot startup.
+
+## Optional BoboWatch monitoring
+
+The installed app can send HTTP metrics to the same BoboWatch dashboard as
+Flightrepo. It uses an authenticated ingestion API, never a shared SQLite file.
+Only eight standard-library producer/configuration modules from the pinned
+`vendor/bobowatch` Git submodule enter the app wheel. The BoboWatch server, SQL
+storage and dashboard are not installed into Trip Split. The wheel uses Hatchling
+(the same build backend as Flightrepo) to bundle that explicit file list and all
+frontend assets; no monitoring runtime dependency is downloaded with pip.
+
+After installing a real (non-demo) BoboWatch runtime, deploy from Trip Split:
+
+```sh
+cd ~/p/trip_dollar
+git switch main
+git pull --ff-only
+./deployment/trip-split deploy \
+  --bobowatch-runtime-dir "$HOME/Library/Application Support/fyi.boboji.watch"
+./deployment/trip-split check --public
+```
+
+Deployment initializes the exact recorded submodule revision before stopping the
+app. Installation does not read BoboWatch configuration or register a producer.
+At startup the installed adapter registers project `trip-dollar`, site
+`trip-split-production`, a stable hostname-derived host ID and a distinct
+`trip-split-…-r01` replica. It creates/reuses a private producer token automatically.
+No copying/pasting monitoring tokens is required. The BoboWatch process can be
+stopped during registration; neither its API nor its database is opened. The
+existing receiver reloads registrations while serving. Start BoboWatch separately
+whenever you want to view/collect history; Trip Split never starts it.
+
+Trip Split always reads its own settings from
+`~/Library/Application Support/fyi.boboji.split/settings.json`. The selected
+BoboWatch runtime path and stable IDs are saved there as
+`monitoring_registration`; API endpoint, token-file path and interval are saved
+as `monitoring`. The token itself lives in `tokens/bobowatch.token`, outside Git.
+The endpoint comes from the selected runtime's `monitor.toml` (same-host loopback).
+Ordinary subsequent `deploy`/`start` commands reuse an enabled saved registration.
+Using no target on a never-enabled installation leaves monitoring off. Explicitly
+set `monitoring.enabled` to `false` to disable delivery; it remains disabled on
+subsequent starts unless you explicitly select a BoboWatch runtime again.
+
+For separate installation and startup:
+
+```sh
+./deployment/trip-split stop
+python3 installation/install.py
+./deployment/trip-split start \
+  --bobowatch-runtime-dir "$HOME/Library/Application Support/fyi.boboji.watch"
+```
+
+An already-enabled sender reloads endpoint, token path, interval and enabled state
+from its settings in the background. Re-register against a changed local receiver
+configuration without restarting Trip Split:
+
+```sh
+./deployment/trip-split monitoring \
+  --bobowatch-runtime-dir "$HOME/Library/Application Support/fyi.boboji.watch"
+```
+
+Initially enabling monitoring on an app launched with it disabled requires a
+stop/start or deployment so middleware is installed. Changing replica identity
+also requires a restart. Invalid live edits retain the last valid target.
+
+Delivery is asynchronous with bounded in-memory counters/events and retry/backoff.
+A stopped or unavailable BoboWatch does not block calculations. Aggregate counters
+survive receiver outages while this app process remains alive; detailed outage
+history is not reconstructed, and unsent counters are lost if the app restarts.
+BoboWatch history remains subject to its RAM-only storage and retention quota.
+
+Metrics cover requests/rate, status classes, errors, latency histograms, active
+requests, known body sizes and fixed route templates (`/`, `/health`,
+`/api/calculate`, `/static/<path:filename>` plus `unmatched`). They include Flask
+host validation failures, payload rejections and busy-calculator 503s. Requests
+rejected earlier by Waitress or Cloudflare are not observable by this middleware.
+Body sizes exclude headers/network overhead; unread bodies and interrupted
+responses remain unsized. Expense notes, participant names, amounts, FX values,
+request/response bodies, query strings and client addresses are never exported.
+Preflight `--check` and installation do not start a sender; regular local/public
+checks against the running app are ordinary measured requests.
+
+The normal package install/CLI stays usable without Flask, Waitress or an enabled
+monitor. For development, initialize the pinned source before installing:
+
+```sh
+git submodule update --init vendor/bobowatch
+python3 -m pip install -e '.[dev]'
+python3 -m pytest -q
+```

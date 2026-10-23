@@ -7,6 +7,7 @@ Calculate shared trip expenses and who owes whom.
 Python 3.11 or newer:
 
 ```bash
+git submodule update --init vendor/bobowatch
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e '.[dev]'
@@ -183,3 +184,8 @@ print(result.to_dict())
 Configuration examples are in `examples/ledger.json` and `examples/demo/`.
 Participants, currencies, rates and default allocation are data, never trip-specific
 parser rules. The CLI accepts only raw text; the former two-file CLI has been removed.
+
+
+Optional [BoboWatch monitoring](deployment/README.md#optional-bobowatch-monitoring)
+adds HTTP graphs and automatic producer registration during explicit deployment.
+It remains off until selected and sends no expense data.
