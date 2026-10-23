@@ -178,3 +178,27 @@ checking status afterward; verify manual stop keeps both jobs unloaded. Verify
 logout/reboot leaves them stopped until manual start. A public check must come
 from outside the Mac's local session as well; never equate local health with
 tunnel reachability.
+
+## One-command deployment
+
+After the one-time connector/tunnel-token setup, run from the checkout:
+
+```sh
+./deployment/trip-split deploy
+```
+
+This stops both serving jobs, installs the current checkout, starts the app and
+connector, then runs the local health/frontend/calculation check. Update the
+checkout separately with `git pull`. Public verification remains explicit:
+
+```sh
+./deployment/trip-split check --public
+```
+
+Deployment preserves private settings, the tunnel token and existing user data.
+A failed stop prevents installation. A failed installation leaves the app stopped
+and marked incomplete; a failed start/final check unloads both jobs. Cleanup errors
+are reported explicitly. There is no automatic rollback. Rerun a successful
+installation/deployment before starting after an interrupted install. The separate
+installer and `start`, `stop`, `status`, `tunnel` and `check` commands remain.
+Nothing is installed for login/boot startup.

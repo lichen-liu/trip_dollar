@@ -1,6 +1,14 @@
 #!/bin/sh
 set -eu
+if [ "${1:-}" = deploy ]; then
+    exec python3 "$(dirname "$0")/deploy.py" "$@"
+fi
 trip_split_root="$HOME/Library/Application Support/fyi.boboji.split"
+# An older installed controller may predate the incomplete-install guard.
+if [ "${1:-}" = start ] && { [ -e "$trip_split_root/installing" ] || [ -L "$trip_split_root/installing" ]; }; then
+    echo "Installation is incomplete. Rerun the installer while stopped." >&2
+    exit 1
+fi
 if [ ! -x "$trip_split_root/venv/bin/python" ]; then
     case "${1:-}" in
         stop|status) exec python3 "$(dirname "$0")/manage.py" "$@" ;;

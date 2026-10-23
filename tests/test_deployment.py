@@ -387,3 +387,57 @@ def test_status_reports_jobs_when_port_settings_are_unavailable(scripts, runtime
     assert "server: stopped" in output
     assert "tunnel: stopped" in output
     assert "Server port: unavailable" in output
+
+
+@pytest.mark.parametrize("failure", [None, "stop", "install", "start", "check"])
+def test_deploy_order_failure_cleanup_and_private_state(scripts, runtime, monkeypatch, failure):
+    from types import SimpleNamespace
+
+    module = load_script("trip_deploy_test", REPO / "deployment/deploy.py")
+    files = {"settings.json": (runtime / "settings.json").read_bytes(), "tunnel-token": b"private-token", "existing-data": b"preserved"}
+    for name, value in files.items():
+        (runtime / name).write_bytes(value)
+    calls = []
+    def stage(name):
+        calls.append(name)
+        if name == failure:
+            raise ValueError("failed " + name)
+    installer = SimpleNamespace(install=lambda *a: stage("install"))
+    monkeypatch.setattr(module.importlib.util, "spec_from_file_location", lambda *a: SimpleNamespace(loader=SimpleNamespace(exec_module=lambda target: None)))
+    monkeypatch.setattr(module.importlib.util, "module_from_spec", lambda *a: installer)
+    monkeypatch.setattr(module, "stop", lambda: stage("stop"))
+    monkeypatch.setattr(module, "start", lambda root: stage("start"))
+    monkeypatch.setattr(module, "check", lambda root: stage("check"))
+    if failure:
+        with pytest.raises(ValueError, match="failed " + failure):
+            module.deploy(runtime)
+    else:
+        module.deploy(runtime)
+    expected = {None: ["stop", "install", "start", "check"], "stop": ["stop"], "install": ["stop", "install"], "start": ["stop", "install", "start", "stop"], "check": ["stop", "install", "start", "check", "stop"]}
+    assert calls == expected[failure]
+    assert all((runtime / name).read_bytes() == value for name, value in files.items())
+
+
+def test_deploy_help_without_install_does_not_load_jobs():
+    result = subprocess.run([str(REPO / "deployment/trip-split"), "deploy", "--help"], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    assert "stop/install/start/check" in result.stdout
+
+
+def test_failed_install_is_marked_incomplete_and_cannot_start(scripts, runtime, monkeypatch):
+    from types import SimpleNamespace
+
+    manage, _, installer = scripts
+    manage.private_write(runtime / "tunnel-token", b"preserved-token")
+    prior_settings = (runtime / "settings.json").read_bytes()
+    monkeypatch.setattr(installer, "loaded", lambda job: False)
+    monkeypatch.setattr(installer.venv, "EnvBuilder", lambda **kw: SimpleNamespace(create=lambda path: None))
+    monkeypatch.setattr(installer.subprocess, "run", lambda *a, **kw: (_ for _ in ()).throw(subprocess.CalledProcessError(1, a[0])))
+    with pytest.raises(subprocess.CalledProcessError):
+        installer.install(runtime)
+    assert (runtime / "installing").exists()
+    assert (runtime / "settings.json").read_bytes() == prior_settings
+    assert (runtime / "tunnel-token").read_bytes() == b"preserved-token"
+    monkeypatch.setattr(manage, "loaded", lambda job: False)
+    with pytest.raises(ValueError, match="incomplete"):
+        manage.start(runtime)
