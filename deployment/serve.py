@@ -7,6 +7,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 import re
+import signal
 
 
 def read_settings(root: Path) -> dict:
@@ -22,7 +23,7 @@ def read_settings(root: Path) -> dict:
     return {"hostname": hostname, "port": port}
 
 
-def create_server(root: Path):
+def create_server(root: Path, *, monitoring: bool = False):
     from trip_dollar.server.app import create_app
 
     settings = read_settings(root)
@@ -39,6 +40,12 @@ def create_server(root: Path):
         "connection_limit": 32, "backlog": 32, "channel_timeout": 30,
         "expose_tracebacks": False,
     }
+    if monitoring:
+        from trip_dollar.server.monitoring import wrap_application
+        receipt = json.loads((root / "installation.json").read_text())
+        wrapped = wrap_application(app, root / "settings.json",
+                                   revision=receipt.get("source_commit", "unknown"))
+        app.extensions["bobowatch"] = wrapped
     return app, options
 
 
@@ -47,11 +54,13 @@ def main(argv=None):
     parser.add_argument("--check", action="store_true", help="check installation without listening")
     args = parser.parse_args(argv)
     root = Path(__file__).resolve().parent
-    app, options = create_server(root)
+    app, options = create_server(root, monitoring=not args.check)
     if args.check:
         client = app.test_client()
-        if client.get("/health").status_code != 200 or client.get("/static/app.js").status_code != 200:
-            raise RuntimeError("The installed app or frontend assets are missing.")
+        for path in ("/health", "/static/app.js"):
+            with client.get(path) as response:
+                if response.status_code != 200:
+                    raise RuntimeError("The installed app or frontend assets are missing.")
         print("Installed app and frontend assets are ready.")
         return
     handler = RotatingFileHandler(root / "logs" / "server.log", maxBytes=1_000_000, backupCount=3)
@@ -60,7 +69,23 @@ def main(argv=None):
     logging.getLogger().setLevel(logging.WARNING)
     from waitress import serve
 
-    serve(app, **options)
+    wrapped = app.extensions.get("bobowatch")
+    previous = signal.getsignal(signal.SIGTERM)
+
+    def terminate(signum, frame):
+        raise KeyboardInterrupt
+
+    signal.signal(signal.SIGTERM, terminate)
+    try:
+        if wrapped:
+            wrapped.start()
+        serve(app, **options)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        signal.signal(signal.SIGTERM, previous)
+        if wrapped:
+            wrapped.close()
 
 
 if __name__ == "__main__":

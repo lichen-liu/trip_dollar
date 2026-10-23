@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=68"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "trip-dollar"
@@ -20,12 +20,22 @@ web = ["Flask>=3.1,<4", "waitress>=3,<4"]
 trip-dollar = "trip_dollar.cli:main"
 trip-dollar-web = "trip_dollar.server.app:main"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.hatch.build.targets.wheel]
+packages = ["src/trip_dollar"]
 
-[tool.setuptools.package-data]
-"trip_dollar.frontend" = ["templates/*.html", "static/*.css", "static/*.js", "static/*.json", "static/*.svg", "static/fonts/*.woff2", "static/fonts/*.txt"]
+[tool.hatch.build]
+dev-mode-dirs = ["src", "vendor/bobowatch"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"vendor/bobowatch/bobowatch/__init__.py" = "bobowatch/__init__.py"
+"vendor/bobowatch/bobowatch/adapter.py" = "bobowatch/adapter.py"
+"vendor/bobowatch/bobowatch/protocol.py" = "bobowatch/protocol.py"
+"vendor/bobowatch/bobowatch/wsgi.py" = "bobowatch/wsgi.py"
+"vendor/bobowatch/bobowatch/client.py" = "bobowatch/client.py"
+"vendor/bobowatch/bobowatch/config.py" = "bobowatch/config.py"
+"vendor/bobowatch/bobowatch/paths.py" = "bobowatch/paths.py"
+"vendor/bobowatch/bobowatch/provision.py" = "bobowatch/provision.py"
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = ["src", "vendor/bobowatch"]
 testpaths = ["tests"]
