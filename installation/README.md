@@ -74,3 +74,8 @@ The old directory is retained; after verifying the new installation, you can
 remove it. Start explicitly with `./deployment/trip-split start` when ready.
 
 Continue with the [deployment plan](../deployment/README.md).
+
+For an existing configured runtime, `./deployment/trip-split deploy` combines
+stop/install/start/check while retaining settings and credentials. Installation
+alone still starts nothing. Failed installations keep an incomplete marker and
+startup refuses until installation succeeds.

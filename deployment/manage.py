@@ -109,6 +109,8 @@ def start(root: Path):
     if any(state.values()):
         raise ValueError("Only one job is loaded. Run stop, then start.")
     require_private(root, directory=True)
+    if (root / "installing").exists() or (root / "installing").is_symlink():
+        raise ValueError("Installation is incomplete. Rerun the installer while stopped.")
     for directory in ("jobs", "logs", "venv"):
         require_private(root / directory, directory=True)
     require_private(root / "settings.json")

@@ -33,6 +33,7 @@ def install(root: Path, repo: Path = REPO):
         private_write(settings, b'{"hostname": "split.boboji.fyi", "port": 8000}\n')
     else:
         require_private(settings)
+    private_write(root / "installing", b"Installation incomplete until checks and receipt succeed.\n")
     venv.EnvBuilder(with_pip=True).create(root / "venv")
     python = root / "venv" / "bin" / "python"
     # Building a wheel avoids an editable install that changes with the checkout.
@@ -59,6 +60,7 @@ def install(root: Path, repo: Path = REPO):
         "source_commit": version, "uncommitted_changes": bool(dirty),
         "wheel_sha256": fingerprint, "dependencies": dependencies,
     }, indent=2).encode() + b"\n")
+    (root / "installing").unlink()
     print(f"Installed privately at {root}")
     if dirty:
         print("Note: this installation includes uncommitted checkout changes.")
