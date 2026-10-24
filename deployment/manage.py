@@ -257,7 +257,8 @@ def probe(base_url: str):
     def fetch(path, payload=None):
         body = json.dumps(payload).encode() if payload is not None else None
         request = Request(base_url + path, data=body,
-                          headers={"Content-Type": "application/json", "Origin": base_url})
+                          headers={"Content-Type": "application/json", "Origin": base_url,
+                                   "User-Agent": "Trip-Split-Deployment-Check/1.0"})
         with opener.open(request, timeout=10) as response:
             if origin(response.geturl()) != expected:
                 raise ValueError("The response is not from the configured Trip Split origin.")
