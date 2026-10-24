@@ -323,32 +323,36 @@ def test_start_of_partial_job_set_requires_explicit_stop(scripts, runtime, monke
         manage.start(runtime)
 
 
-def test_probe_checks_real_app_with_manual_fx(scripts, monkeypatch):
+@pytest.mark.parametrize("base_url", ["http://127.0.0.1:8000", "https://split.boboji.fyi"])
+def test_probe_checks_real_app_with_manual_fx(scripts, monkeypatch, base_url):
     manage, serving, _ = scripts
     from trip_dollar.server.app import create_app
-    client = create_app({"TESTING": True, "RATE_LOADER": lambda *args, **kwargs: pytest.fail("No external FX lookup")}).test_client()
+    client = create_app({"TESTING": True, "TRUSTED_HOSTS": ["127.0.0.1", "split.boboji.fyi"],
+                         "RATE_LOADER": lambda *args, **kwargs: pytest.fail("No external FX lookup")}).test_client()
     paths = []
 
     class Response:
         def __init__(self, request):
             self.url = request.full_url
-            path = self.url.removeprefix("http://127.0.0.1:8000")
+            path = self.url.removeprefix(base_url)
             paths.append(path)
-            self.response = client.open(path, base_url="http://127.0.0.1:8000", method=request.get_method(), data=request.data,
+            self.response = client.open(path, base_url=base_url, method=request.get_method(), data=request.data,
                                         headers=dict(request.header_items()))
             self.status = self.response.status_code
         def __enter__(self): return self
-        def __exit__(self, *args): pass
+        def __exit__(self, *args): self.response.close()
         def geturl(self): return self.url
         def read(self, limit): return self.response.data[:limit]
 
     class Opener:
         def open(self, request, timeout):
             assert timeout == 10
+            assert request.get_header("User-agent") == "Trip-Split-Deployment-Check/1.0"
+            assert request.get_header("Origin") == base_url
             return Response(request)
 
     monkeypatch.setattr(manage, "build_opener", lambda handler: Opener())
-    manage.probe("http://127.0.0.1:8000")
+    manage.probe(base_url)
     assert paths == ["/", "/static/app.js", "/health", "/api/calculate"]
 
 

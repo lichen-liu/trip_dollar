@@ -98,7 +98,21 @@ Server port: 8000 (configured; http://127.0.0.1:8000/)
 
 `check` verifies the local page, frontend, health and a fixed example calculation
 with manual FX rates. `check --public` runs the same checks through the configured
-HTTPS hostname with normal TLS validation. Failures exit nonzero.
+HTTPS hostname with normal TLS validation. Failures exit nonzero. Requests use
+`User-Agent: Trip-Split-Deployment-Check/1.0`; this identifies the checker rather
+than using Python's generic default, which Cloudflare can reject with HTTP 403 /
+[error 1010](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/).
+No Cloudflare policy change is needed for that client-identity fix.
+
+After updating the checkout, you can run the current checker without reinstalling
+or restarting the app:
+
+```sh
+python3 deployment/manage.py check --public
+```
+
+The `./deployment/trip-split` wrapper uses the installed controller; its checker
+is updated by the next installation/deployment.
 
 The launcher uses the installed `manage.py`, so repository edits alone do not
 update its commands. For a full app update, stop, rerun the installer, then start.
