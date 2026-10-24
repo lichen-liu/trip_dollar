@@ -1,7 +1,9 @@
 # Running CI
 
 PR tests are manual. Tests on `main` are automatic. Both use Python 3.13 and
-run the full pytest suite.
+run the full pytest suite. CI checks out the pinned monitoring submodule and
+also builds/installs an isolated wheel, verifies the CLI without web dependencies,
+and runs monitoring integration tests against that installed wheel.
 
 ## Before merging a PR
 

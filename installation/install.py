@@ -18,6 +18,8 @@ from manage import LABELS, loaded, private_write, require_private, runtime_root
 def install(root: Path, repo: Path = REPO):
     if any(loaded(job) for job in LABELS):
         raise ValueError("Stop Trip Split before installing or updating it.")
+    subprocess.run(["git", "submodule", "update", "--init", "vendor/bobowatch"],
+                   cwd=repo, check=True)
     if root.exists() or root.is_symlink():
         require_private(root, directory=True)
     else:

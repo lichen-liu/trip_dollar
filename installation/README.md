@@ -16,7 +16,7 @@ The installer:
 
 1. Refuses to update while either managed job is loaded.
 2. Creates a private runtime at `~/Library/Application Support/fyi.boboji.split`.
-3. Builds a wheel from this checkout and installs it non-editably with the `web`
+3. Initializes the pinned BoboWatch Git submodule, then builds a wheel from this checkout and installs it non-editably with the `web`
    dependencies into a dedicated virtual environment. Build/runtime dependencies
    are downloaded with pip; no development or test dependencies are installed.
 4. Copies the serving/control scripts, creates non-secret settings and checks
@@ -31,9 +31,10 @@ fyi.boboji.split/
 ├── venv/                 Installed Python app and dependencies
 ├── manage.py             Manual control
 ├── serve.py              Loopback server configuration
-├── settings.json         Hostname and port; no credentials
+├── settings.json         Hostname, port and optional monitoring paths/IDs
 ├── installation.json     Installation receipt
 ├── tunnel-token          Added later with a hidden prompt
+├── tokens/               Optional BoboWatch producer token, registered at startup
 ├── jobs/                 Manually loaded plist files, not login items
 └── logs/                 Private operational logs
 ```
@@ -79,3 +80,9 @@ For an existing configured runtime, `./deployment/trip-split deploy` combines
 stop/install/start/check while retaining settings and credentials. Installation
 alone still starts nothing. Failed installations keep an incomplete marker and
 startup refuses until installation succeeds.
+
+
+Monitoring registration is a separate startup/deployment step. Installation and
+`serve.py --check` do not access BoboWatch configuration, token registry, API or
+SQL database, and start no sender. See the
+[optional monitoring commands](../deployment/README.md#optional-bobowatch-monitoring).

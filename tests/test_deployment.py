@@ -64,9 +64,14 @@ def test_job_definitions_are_manual_private_and_secret_free(scripts, runtime):
 def test_manual_stop_unloads_connector_before_server(scripts, monkeypatch):
     manage, _, _ = scripts
     calls = []
-    monkeypatch.setattr(manage, "loaded", lambda job: True)
-    monkeypatch.setattr(manage, "launchctl", lambda *args: (
-        calls.append(args) or subprocess.CompletedProcess(args, 0)))
+    jobs = set(manage.LABELS)
+    monkeypatch.setattr(manage, "loaded", lambda job: job in jobs)
+    def bootout(*args):
+        calls.append(args)
+        job = next(job for job in jobs if manage.target(job) == args[-1])
+        jobs.remove(job)
+        return subprocess.CompletedProcess(args, 0)
+    monkeypatch.setattr(manage, "launchctl", bootout)
     manage.stop()
     assert calls == [("bootout", manage.target("tunnel")), ("bootout", manage.target("server"))]
 
@@ -151,6 +156,9 @@ def test_stop_attempts_both_jobs_even_if_connector_fails(scripts, monkeypatch):
     monkeypatch.setattr(manage, "loaded", lambda job: True)
     monkeypatch.setattr(manage, "launchctl", lambda *args: (
         calls.append(args) or subprocess.CompletedProcess(args, 1)))
+    def timeout(job):
+        raise RuntimeError("Timed out")
+    monkeypatch.setattr(manage, "wait_unloaded", timeout)
     with pytest.raises(RuntimeError, match="tunnel, server"):
         manage.stop()
     assert len(calls) == 2
@@ -406,7 +414,8 @@ def test_deploy_order_failure_cleanup_and_private_state(scripts, runtime, monkey
     monkeypatch.setattr(module.importlib.util, "spec_from_file_location", lambda *a: SimpleNamespace(loader=SimpleNamespace(exec_module=lambda target: None)))
     monkeypatch.setattr(module.importlib.util, "module_from_spec", lambda *a: installer)
     monkeypatch.setattr(module, "stop", lambda: stage("stop"))
-    monkeypatch.setattr(module, "start", lambda root: stage("start"))
+    monkeypatch.setattr(module, "start", lambda root, **kwargs: stage("start"))
+    monkeypatch.setattr(module.subprocess, "run", lambda *a, **kw: subprocess.CompletedProcess(a, 0))
     monkeypatch.setattr(module, "check", lambda root: stage("check"))
     if failure:
         with pytest.raises(ValueError, match="failed " + failure):
@@ -432,7 +441,11 @@ def test_failed_install_is_marked_incomplete_and_cannot_start(scripts, runtime, 
     prior_settings = (runtime / "settings.json").read_bytes()
     monkeypatch.setattr(installer, "loaded", lambda job: False)
     monkeypatch.setattr(installer.venv, "EnvBuilder", lambda **kw: SimpleNamespace(create=lambda path: None))
-    monkeypatch.setattr(installer.subprocess, "run", lambda *a, **kw: (_ for _ in ()).throw(subprocess.CalledProcessError(1, a[0])))
+    def failed_wheel(args, **kwargs):
+        if args[:3] == ["git", "submodule", "update"]:
+            return subprocess.CompletedProcess(args, 0)
+        raise subprocess.CalledProcessError(1, args)
+    monkeypatch.setattr(installer.subprocess, "run", failed_wheel)
     with pytest.raises(subprocess.CalledProcessError):
         installer.install(runtime)
     assert (runtime / "installing").exists()
@@ -441,3 +454,16 @@ def test_failed_install_is_marked_incomplete_and_cannot_start(scripts, runtime, 
     monkeypatch.setattr(manage, "loaded", lambda job: False)
     with pytest.raises(ValueError, match="incomplete"):
         manage.start(runtime)
+
+
+def test_stop_waits_for_async_bootout_and_is_bounded(scripts, monkeypatch):
+    manage, _, _ = scripts
+    states = iter([True, True, False])
+    sleeps = []
+    monkeypatch.setattr(manage, "loaded", lambda job: next(states))
+    monkeypatch.setattr(manage.time, "sleep", sleeps.append)
+    manage.wait_unloaded("server")
+    assert sleeps == [0.1, 0.1]
+    monkeypatch.setattr(manage, "loaded", lambda job: True)
+    with pytest.raises(RuntimeError, match="Timed out waiting for server"):
+        manage.wait_unloaded("server", timeout=0)

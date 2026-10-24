@@ -1,0 +1,88 @@
+"""Optional BoboWatch instrumentation and same-user deployment provisioning."""
+
+import argparse
+import hashlib
+import json
+import os
+import socket
+from pathlib import Path
+
+
+def wrap_application(app, settings_path, *, revision="unknown"):
+    """Attach optional instrumentation outside Flask's validation and routing."""
+    settings_path = Path(settings_path)
+    data = json.loads(settings_path.read_text())
+    config = data.get("monitoring", {"enabled": False})
+    if not isinstance(config, dict) or type(config.get("enabled", False)) is not bool:
+        raise ValueError("monitoring.enabled must be a boolean")
+    if not config.get("enabled", False):
+        return None
+    from bobowatch.client import ConfiguredMonitor, client_settings
+    from bobowatch.wsgi import InstrumentedApp
+    from flask import request
+
+    client_settings(settings_path)  # Validate before listening; no network or SQL.
+    routes = tuple(sorted({rule.rule for rule in app.url_map.iter_rules()}))
+
+    @app.after_request
+    def route_template(response):
+        if request.url_rule is not None:
+            request.environ["bobowatch.route"] = request.url_rule.rule
+        return response
+
+    wrapped = InstrumentedApp(
+        app.wsgi_app,
+        lambda: ConfiguredMonitor(settings_path, routes=routes, revision=revision),
+    )
+    app.wsgi_app = wrapped
+    return wrapped
+
+
+def provision(root, watch_runtime=None):
+    """An idempotent deployment step; no BoboWatch process or database is started."""
+    from bobowatch.paths import runtime_root
+    from bobowatch.provision import ensure_registration, private_write, require_private
+
+    root = Path(root).expanduser().resolve()
+    require_private(root, directory=True)
+    path = root / "settings.json"
+    require_private(path)
+    data = json.loads(path.read_text())
+    registration = data.get("monitoring_registration", {})
+    if not isinstance(registration, dict):
+        raise ValueError("monitoring_registration must be an object")
+    selected = (
+        watch_runtime or os.environ.get("BOBOWATCH_RUNTIME_DIR") or registration.get("runtime_dir")
+    )
+    watch = runtime_root(selected)
+    host = registration.get(
+        "host", "host-" + hashlib.sha256(socket.gethostname().encode()).hexdigest()[:12]
+    )
+    identity = {
+        "project": registration.get("project", "trip-dollar"),
+        "site": registration.get("site", "trip-split-production"),
+        "host": host,
+        "replica": registration.get("replica", "trip-split-" + host + "-r01"),
+        "environment": registration.get("environment", "production"),
+    }
+    tokens = root / "tokens"
+    tokens.mkdir(mode=0o700, exist_ok=True)
+    require_private(tokens, directory=True)
+    config = ensure_registration(runtime=watch, token_file=tokens / "bobowatch.token", **identity)
+    data["monitoring"] = config
+    data["monitoring_registration"] = {"runtime_dir": str(watch), **identity}
+    private_write(path, (json.dumps(data, indent=2) + "\n").encode())
+    return config
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Provision optional Trip Split monitoring.")
+    parser.add_argument("--runtime-dir", type=Path, required=True)
+    parser.add_argument("--bobowatch-runtime-dir", type=Path)
+    args = parser.parse_args()
+    result = provision(args.runtime_dir, args.bobowatch_runtime_dir)
+    print(json.dumps(result))  # Contains file paths, never credentials.
+
+
+if __name__ == "__main__":
+    main()

@@ -24,6 +24,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -37,3 +38,15 @@ jobs:
 
       - name: Run pytest
         run: python -m pytest -q
+
+      - name: Build and verify the isolated application wheel
+        run: |
+          python -m pip wheel --no-deps --wheel-dir dist .
+          python -m venv /tmp/trip-split-wheel
+          /tmp/trip-split-wheel/bin/python -m pip install dist/trip_dollar-*.whl
+          cd /tmp
+          /tmp/trip-split-wheel/bin/python -c "import bobowatch.wsgi, bobowatch.provision; from trip_dollar.cli import argument_parser; assert argument_parser().prog"
+          /tmp/trip-split-wheel/bin/python -c "import importlib.util; assert importlib.util.find_spec('bobowatch.server') is None"
+
+          /tmp/trip-split-wheel/bin/python -m pip install 'flask>=3.1,<4' 'waitress>=3,<4' 'pytest>=8'
+          /tmp/trip-split-wheel/bin/python -m pytest -c "$GITHUB_WORKSPACE/pyproject.toml" -o pythonpath= "$GITHUB_WORKSPACE/tests/test_monitoring.py" -q
