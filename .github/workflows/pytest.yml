@@ -24,7 +24,6 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
-          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -35,6 +34,25 @@ jobs:
 
       - name: Install project and test dependencies
         run: python -m pip install -e '.[dev]'
+
+      - name: Locate the adapter's matching collector test source
+        id: watch_source
+        run: |
+          python - <<'PYTHON' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          import bobowatch
+          manifest = json.loads(Path(bobowatch.__file__).with_name("_adapter_build.json").read_text())
+          print("ref=" + manifest["source_commit"])
+          PYTHON
+      - name: Check out development-only collector fixtures
+        uses: actions/checkout@v7
+        with:
+          repository: lichen-liu/boboji
+          ref: ${{ steps.watch_source.outputs.ref }}
+          path: var/bobowatch-source
+          sparse-checkout: projects/bobowatch
+          persist-credentials: false
 
       - name: Run pytest
         run: python -m pytest -q

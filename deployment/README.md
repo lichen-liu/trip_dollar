@@ -222,11 +222,10 @@ Nothing is installed for login/boot startup.
 
 The installed app can send HTTP metrics to the same BoboWatch dashboard as
 Flightrepo. It uses an authenticated ingestion API, never a shared SQLite file.
-Only eight standard-library producer/configuration modules from the pinned
-`vendor/bobowatch` Git submodule enter the app wheel. The BoboWatch server, SQL
-storage and dashboard are not installed into Trip Split. The wheel uses Hatchling
-(the same build backend as Flightrepo) to bundle that explicit file list and all
-frontend assets; no monitoring runtime dependency is downloaded with pip.
+The SHA-256-pinned `boboji-bobowatch-adapter` wheel from Boboji supplies the
+standard-library adapter. The app wheel no longer embeds those files. Collector
+SQL storage, dashboard, and server dependencies are not installed into Trip Split.
+Hatchling packages the application and frontend assets independently.
 
 After installing a real (non-demo) BoboWatch runtime, deploy from Trip Split:
 
@@ -239,8 +238,8 @@ git pull --ff-only
 ./deployment/trip-split check --public
 ```
 
-Deployment initializes the exact recorded submodule revision before stopping the
-app. Installation does not read BoboWatch configuration or register a producer.
+Deployment stops the app and installs its pinned package dependencies.
+Installation does not read BoboWatch configuration or register a producer.
 At startup the installed adapter registers project `trip-dollar`, site
 `trip-split-production`, a stable hostname-derived host ID and a distinct
 `trip-split-…-r01` replica. It creates/reuses a private producer token automatically.
@@ -300,10 +299,10 @@ Preflight `--check` and installation do not start a sender; regular local/public
 checks against the running app are ordinary measured requests.
 
 The normal package install/CLI stays usable without Flask, Waitress or an enabled
-monitor. For development, initialize the pinned source before installing:
+monitor. For development, install the pinned dependency and prepare the fictional
+collector fixture as described in [installation](../installation/README.md):
 
 ```sh
-git submodule update --init vendor/bobowatch
 python3 -m pip install -e '.[dev]'
 python3 -m pytest -q
 ```

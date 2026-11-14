@@ -10,7 +10,9 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [{name = "Trip Dollar contributors"}]
-dependencies = []
+dependencies = [
+  "boboji-bobowatch-adapter @ https://github.com/lichen-liu/boboji/releases/download/bobowatch-adapter/v0.3.0/boboji_bobowatch_adapter-0.3.0-py3-none-any.whl#sha256=f28b1b69927b26758c225d979f7fb20c20c8763e5fea0d52a1e2d8ad221d3fdc",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "Flask>=3.1,<4", "waitress>=3,<4"]
@@ -24,18 +26,12 @@ trip-dollar-web = "trip_dollar.server.app:main"
 packages = ["src/trip_dollar"]
 
 [tool.hatch.build]
-dev-mode-dirs = ["src", "vendor/bobowatch"]
+dev-mode-dirs = ["src"]
 
-[tool.hatch.build.targets.wheel.force-include]
-"vendor/bobowatch/bobowatch/__init__.py" = "bobowatch/__init__.py"
-"vendor/bobowatch/bobowatch/adapter.py" = "bobowatch/adapter.py"
-"vendor/bobowatch/bobowatch/protocol.py" = "bobowatch/protocol.py"
-"vendor/bobowatch/bobowatch/wsgi.py" = "bobowatch/wsgi.py"
-"vendor/bobowatch/bobowatch/client.py" = "bobowatch/client.py"
-"vendor/bobowatch/bobowatch/config.py" = "bobowatch/config.py"
-"vendor/bobowatch/bobowatch/paths.py" = "bobowatch/paths.py"
-"vendor/bobowatch/bobowatch/provision.py" = "bobowatch/provision.py"
 
 [tool.pytest.ini_options]
-pythonpath = ["src", "vendor/bobowatch"]
+pythonpath = ["src"]
 testpaths = ["tests"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
