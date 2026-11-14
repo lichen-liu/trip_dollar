@@ -14,8 +14,6 @@ REPO = Path(__file__).resolve().parents[1]
 
 
 def deploy(root: Path, watch_runtime: Path | None = None):
-    subprocess.run(["git", "submodule", "update", "--init", "vendor/bobowatch"],
-                   cwd=REPO, check=True)
     spec = importlib.util.spec_from_file_location("trip_split_installer", REPO / "installation/install.py")
     installer = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(installer)

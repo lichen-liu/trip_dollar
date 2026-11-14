@@ -16,7 +16,7 @@ The installer:
 
 1. Refuses to update while either managed job is loaded.
 2. Creates a private runtime at `~/Library/Application Support/fyi.boboji.split`.
-3. Initializes the pinned BoboWatch Git submodule, then builds a wheel from this checkout and installs it non-editably with the `web`
+3. Builds a wheel from this checkout and installs it non-editably with the `web`
    dependencies into a dedicated virtual environment. Build/runtime dependencies
    are downloaded with pip; no development or test dependencies are installed.
 4. Copies the serving/control scripts, creates non-secret settings and checks
@@ -86,3 +86,34 @@ Monitoring registration is a separate startup/deployment step. Installation and
 `serve.py --check` do not access BoboWatch configuration, token registry, API or
 SQL database, and start no sender. See the
 [optional monitoring commands](../deployment/README.md#optional-bobowatch-monitoring).
+
+
+## Adapter upgrades and monitoring test fixtures
+
+The `boboji-bobowatch-adapter` dependency is pinned to the Boboji release URL and
+SHA-256 in `pyproject.toml`. It provides the existing imports without a collector,
+database, dashboard, or third-party runtime dependencies. The former submodule
+and wheel force-includes are removed. The installer detects an old app wheel
+that owns `bobowatch/` and uninstalls that app before installing the new dependency,
+preventing pip from deleting the new adapter's overlapping files during upgrade.
+Private runtime settings, tokens, and data are preserved. If upgrading manually,
+uninstall the old application package before installing the new release.
+
+Monitoring integration tests need a matching fictional receiver, separate from
+the runtime dependency. CI reads the adapter's embedded source revision and
+checks out only the corresponding Boboji project under ignored
+`var/bobowatch-source`. No tests contact an installed monitor or production data.
+For local development, after installing the dev dependencies:
+
+```sh
+git clone --filter=blob:none --no-checkout https://github.com/lichen-liu/boboji.git var/bobowatch-source
+git -C var/bobowatch-source sparse-checkout set projects/bobowatch
+watch_fixture_revision="$(python3 -c 'import json; from pathlib import Path; import bobowatch; print(json.loads(Path(bobowatch.__file__).with_name("_adapter_build.json").read_text())["source_commit"])')"
+git -C var/bobowatch-source checkout --detach "$watch_fixture_revision"
+python3 -m pytest -q
+```
+
+An existing local canonical source can instead be selected explicitly with
+`BOBOWATCH_TEST_SOURCE=/absolute/path/to/projects/bobowatch/bobowatch` for tests.
+The test source is never included in the application wheel or installed runtime.
+Collector installation is independent, from `projects/bobowatch` in Boboji.

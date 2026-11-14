@@ -15,11 +15,25 @@ sys.path.insert(0, str(REPO / "deployment"))
 from manage import LABELS, loaded, private_write, require_private, runtime_root
 
 
+def remove_embedded_adapter(python):
+    """Remove the old app owner before pip installs the adapter's overlapping files."""
+    probe = """import importlib.metadata as metadata
+try:
+    files = metadata.distribution(DISTRIBUTION).files or ()
+except metadata.PackageNotFoundError:
+    files = ()
+print("embedded" if any(str(path).startswith("bobowatch/") for path in files) else "separate")
+""".replace("DISTRIBUTION", repr('trip-dollar'))
+    result = subprocess.run([str(python), "-c", probe], check=True, capture_output=True, text=True)
+    if result.stdout.strip() != "embedded":
+        return False
+    subprocess.run([str(python), "-m", "pip", "uninstall", "--yes", 'trip-dollar'], check=True)
+    return True
+
+
 def install(root: Path, repo: Path = REPO):
     if any(loaded(job) for job in LABELS):
         raise ValueError("Stop Trip Split before installing or updating it.")
-    subprocess.run(["git", "submodule", "update", "--init", "vendor/bobowatch"],
-                   cwd=repo, check=True)
     if root.exists() or root.is_symlink():
         require_private(root, directory=True)
     else:
@@ -47,6 +61,7 @@ def install(root: Path, repo: Path = REPO):
             raise RuntimeError("The build did not produce exactly one app wheel.")
         wheel = wheels[0]
         fingerprint = hashlib.sha256(wheel.read_bytes()).hexdigest()
+        remove_embedded_adapter(python)
         subprocess.run([str(python), "-m", "pip", "install", "--upgrade", "--force-reinstall",
                         f"{wheel}[web]"], check=True)
     for name in ("manage.py", "serve.py"):

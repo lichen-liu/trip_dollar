@@ -7,7 +7,6 @@ Calculate shared trip expenses and who owes whom.
 Python 3.11 or newer:
 
 ```bash
-git submodule update --init vendor/bobowatch
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e '.[dev]'
